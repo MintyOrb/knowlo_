@@ -256,7 +256,7 @@ export default {
   font-size: 15px;
 }
 .list {
-    padding: 1% 1% 0% 2%;
+    padding: .5% 1% 1% 2%;
     width: 94%;
     margin-left: 3%;
     min-height: 40px;
@@ -267,25 +267,25 @@ export default {
     max-width: 100vw;
 }
 .card {
-    width: 20%;
-    padding: 15px;
-		box-shadow: none;
+		box-shadow: none!important;
+    margin: 5px!important;
+    padding: 0px!important;
 }
 .card-bottom {
-    margin: -11px;
+    margin: -11px!important;
 }
 .card-bottom i {
-    vertical-align: middle;
-    margin-bottom: 3px;
-    padding-left: 3px;
-    padding-right: 3px;
+    vertical-align: middle!important;
+    margin-bottom: 3px!important;
+    padding-left: 3px!important;
+    padding-right: 3px!important;
 }
 .card .card-content {
-    padding-bottom: 3px;
-    padding-top: 14px;
+    padding-bottom: 3px!important;
+    padding-top: 14px!important;
 }
 .card .card-action {
-		border-top: none
+		border-top: none!important;
 }
 .list .rText {
   font-size: 14px;
@@ -316,32 +316,28 @@ export default {
 .rating.selected {
   opacity: 1;
 }
-.card {
-  margin: 5px;
-  padding: 0px;
-}
   /* iPads (portrait and landscape) ----------- */
 @media only screen
 and (min-width : 768px)
 and (max-width : 1024px) {
   .card{
-    width: calc(25% - 10px);
+    width: calc(25% - 10px)!important;
   }
 }
 /* Desktops and laptops ----------- */
 @media only screen
 and (min-width : 1224px) {
   .card{
-    width: calc(20% - 10px);
+    width: calc(20% - 10px)!important;
   }
 }
 _:-moz-tree-row(hover), .card {
-    width: calc(20% - 15px);
+    width: calc(20% - 15px)!important;
 }
 @media only screen
 and (max-width : 375px) {
   .card{
-    width: calc(100% - 10px);
+    width: calc(100% - 10px)!important;
   }
 }
 /* Smartphones (landscape) ----------- */
@@ -349,7 +345,7 @@ and (max-width : 375px) {
 and (min-width : 376px)
 and (max-width : 767px) {
   .card{
-    width: calc(50% - 10px);
+    width: calc(50% - 10px)!important;
   }
 }
 

@@ -559,10 +559,10 @@ export default {
     justify-content: center;
 }
 .switch label input[type=checkbox]:checked+.lever {
-    background-color: #8cc3ee;
+    background-color: #8cc3ee!important;
 }
 .switch label input[type=checkbox]:checked+.lever:after {
-    background-color: #2196F3;
+    background-color: #2196F3!important;
 }
 .fullWidth{
   width: calc(100% - 60px);

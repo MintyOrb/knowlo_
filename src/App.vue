@@ -190,7 +190,6 @@ export default {
 <style src="materialize-css/extras/noUiSlider/nouislider.css"></style>
 <style src="firebaseui/dist/firebaseui.css"></style>
 <style>
-<style>
 .modal .modal-content {
   padding: 0px;
 }
@@ -313,10 +312,10 @@ input:not([type]), input[type=text]:not(.browser-default), input[type=password]:
   color:#a8a8a8;
 }
 .noUi-target.noUi-horizontal .noUi-tooltip {
-  background-color: #2196F3;
+  background-color: #2196F3!important;
 }
 .noUi-connect{
-  background-color: #2196F3;
+  background-color: #2196F3!important;
 }
 .hidden{
   visibility: hidden;
@@ -332,7 +331,7 @@ html {
 	font-weight: 700;
 }
 .dropdown-content li>a {
-	color: #2196F3
+	color: #2196F3;
 }
 .dropdown-content li>span {
   color: #2196F3;
@@ -477,14 +476,14 @@ and (max-device-width : 480px) { /* portrait tablets, portrait iPad, landscape e
 element.style {
 }
 input:not([type]):focus:not([readonly]), input[type=text]:not(.browser-default):focus:not([readonly]), input[type=password]:not(.browser-default):focus:not([readonly]), input[type=email]:not(.browser-default):focus:not([readonly]), input[type=url]:not(.browser-default):focus:not([readonly]), input[type=time]:not(.browser-default):focus:not([readonly]), input[type=date]:not(.browser-default):focus:not([readonly]), input[type=datetime]:not(.browser-default):focus:not([readonly]), input[type=datetime-local]:not(.browser-default):focus:not([readonly]), input[type=tel]:not(.browser-default):focus:not([readonly]), input[type=number]:not(.browser-default):focus:not([readonly]), input[type=search]:not(.browser-default):focus:not([readonly]), textarea.materialize-textarea:focus:not([readonly]) {
-    border-bottom: 1px solid #2196F3;
-    box-shadow: 0 1px 0 0 #2196F3;
+    border-bottom: 1px solid #2196F3!important;
+    box-shadow: 0 1px 0 0 #2196F3!important;
   }
 
 element.style {
 }
 input:not([type]):focus:not([readonly]) + label, input[type=text]:not(.browser-default):focus:not([readonly]) + label, input[type=password]:not(.browser-default):focus:not([readonly]) + label, input[type=email]:not(.browser-default):focus:not([readonly]) + label, input[type=url]:not(.browser-default):focus:not([readonly]) + label, input[type=time]:not(.browser-default):focus:not([readonly]) + label, input[type=date]:not(.browser-default):focus:not([readonly]) + label, input[type=datetime]:not(.browser-default):focus:not([readonly]) + label, input[type=datetime-local]:not(.browser-default):focus:not([readonly]) + label, input[type=tel]:not(.browser-default):focus:not([readonly]) + label, input[type=number]:not(.browser-default):focus:not([readonly]) + label, input[type=search]:not(.browser-default):focus:not([readonly]) + label, textarea.materialize-textarea:focus:not([readonly]) + label {
-    color:  #2196F3;
+    color:  #2196F3!important;
   }
 .material-icons {
   font-size: 25px;

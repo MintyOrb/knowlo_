@@ -818,7 +818,7 @@ export default {
   font-weight: 300;
 }
 .collapsible-body {
-  padding:0;
+  padding:0!important;
 }
 .collapsible {
   margin:0;
@@ -829,24 +829,27 @@ export default {
   justify-content: space-between;
 }
 .hoverable {
-  box-shadow: none
+  box-shadow: none!important;
+}
+.hoverable:hover {
+  box-shadow: 0 8px 17px 0 rgba(0,0,0,.2), 0 6px 20px 0 rgba(0,0,0,.19)!important;
 }
 .clear{
-  font-size: 11px;
-  font-weight: 300;
-  line-height: 20px;
-  border-radius: 25px;
-  padding: 0px;
-  color: black;
-  height: 2em;
-  width: 5em;
-  padding-top: 2px;
+  font-size: 11px!important;
+  font-weight: 300!important;
+  line-height: 20px!important;
+  border-radius: 25px!important;
+  padding: 0px!important;
+  color: black!important;
+  height: 2em!important;
+  width: 5em!important;
+  padding-top: 2px!important;
 }
 [type="radio"]:checked+label:after, [type="radio"].with-gap:checked+label:before, [type="radio"].with-gap:checked+label:after {
-    border: 2px solid #2196F3;
+    border: 2px solid #2196F3!important;
 }
 [type="radio"]:checked+label:after, [type="radio"].with-gap:checked+label:after {
-    background-color: #2196F3;
+    background-color: #2196F3!important;
 }
 .suggestionNav {
   z-index: 1;
