@@ -13,7 +13,7 @@
     "cold-s": "node server.js",
     "build": "node build/script.build.js",
     "lint": "eslint --ext .js,.vue src",
-    "start": "npm run dev"
+    "start": "npm run build | node server.js"
   },
   "dependencies": {
     "async": "^2.4.0",
