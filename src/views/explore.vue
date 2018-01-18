@@ -23,7 +23,7 @@
 
         <span class='right'>
   						{{tagQuery.length}} tag<span v-if="tagQuery.length !==1">s</span> in search
-        <span v-if="tagQuery.length > 0" class="clear btn white waves-light" @click.stop.prevent="tagQuery=[]">
+        <span v-if="tagQuery.length > 0" class="clear btn white waves-light" @click.stop.prevent="$emit('clear')">
   							clear
   						</span>
         </span>
@@ -31,44 +31,44 @@
       <div class='container collapsible-body'>
         <!-- tag query  -->
         <div class=''>
-          <isotope style="min-height:150px" ref="tagQuery" :list="tagQuery" :options='{}' >
+          <isotope v-if="selectedPane === 'search'" style="min-height:150px" ref="tagQuery" :list="tagQuery" :options='{}' >
             <tag v-for="tag in tagQuery" :key="tag.setID" :tag="tag" display="thumb" v-on:include="removeTag(tag.setID)" v-on:remove="removeTag(tag.setID)" v-on:focus="focus" v-on:lens="fetchContains" v-on:main="removeTag(tag.setID)">
             </tag>
           </isotope>
-          <div v-if="tagQuery.length > 0" class="clear btn white waves-light" @click="tagQuery=[]">
+          <div v-if="tagQuery.length > 0" class="clear btn white waves-light" @click="$emit('clear')">
             clear
           </div>
         </div>
       </div>
     </li>
     <li data-pane="tags">
-      <div class="collapsible-header"><i class="fa fa-filter"></i>Refine | Tags | Suggestions</div>
+      <div class="collapsible-header"><i class="fa fa-filter"></i>Tag Directory</div>
       <div class="collapsible-body">
         <form id='tagSuggestionOptions'>
-          <!-- <span>
-  				      <input v-model="suggestionDisplay" class="with-gap" name="group1" type="radio" value='size' id="size" />
-  				      <label for="size">Size</label>
-  				    </span>
-  				    <span>
-  				      <input v-model="suggestionDisplay" class="with-gap" name="group1" type="radio" value='time' id="time" />
-  				      <label for="time">Time</label>
-  				    </span> -->
           <span>
-  				      <input v-model="suggestionDisplay" class="with-gap" name="group1" type="radio" value='disciplines' id="disciplines"  />
-  				      <label for="disciplines">Disciplines</label>
-  				    </span>
+                <input v-model="suggestionDisplay" class="with-gap" name="group1" type="radio" value='size' id="size" />
+                <label for="size">Size</label>
+              </span>
+              <span>
+                <input v-model="suggestionDisplay" class="with-gap" name="group1" type="radio" value='time' id="time" />
+                <label for="time">Time</label>
+              </span>
           <span>
-  				      <input v-model="suggestionDisplay" class="with-gap" name="group1" type="radio" value='groups' id="groups" />
-  				      <label for="groups">Groups</label>
-  				    </span>
+                <input v-model="suggestionDisplay" class="with-gap" name="group1" type="radio" value='disciplines' id="disciplines"  />
+                <label for="disciplines">Disciplines</label>
+              </span>
           <span>
-  				      <input v-model="suggestionDisplay" class="with-gap" name="group1" type="radio" value='none' id="none" />
-  				      <label for="none">Top</label>
-  				    </span>
+                <input v-model="suggestionDisplay" class="with-gap" name="group1" type="radio" value='groups' id="groups" />
+                <label for="groups">Groups</label>
+              </span>
+          <span>
+                <input v-model="suggestionDisplay" class="with-gap" name="group1" type="radio" value='none' id="none" />
+                <label for="none">Top</label>
+              </span>
           <span v-if="member.first">
-  				      <input v-model="suggestionDisplay" class="with-gap" name="group1" type="radio" value='member' id="member" />
-  				      <label for="member">{{member.first}}</label>
-  				    </span>
+                <input v-model="suggestionDisplay" class="with-gap" name="group1" type="radio" value='member' id="member" />
+                <label for="member">{{member.first}}</label>
+              </span>
         </form>
         <div>
           <!--  suggested -->
@@ -105,22 +105,22 @@
             </div>
             <!-- suggestions un-grouped filck -->
             <!-- <div v-if="'size disciplines time'.indexOf(suggestionDisplay) > -1">
-  									<div id='suggestionNav' class=" suggestionNav ">
-  										<tag
-  											v-for="tag in tagSuggestions"
-  											:key="tag.setID"
-  											:tag="tag"
-  											:display="'thumb'"
-  											hide="remove lens"
-  											v-on:main="addToQuery(tag)"
-  											v-on:include="addToQuery(tag)"
-  											v-on:exclude="addToQuery(tag)"
-  											v-on:focus="addToQuery(tag)"
-  											v-on:pin="addToQuery(tag)"
-  										>
+                    <div id='suggestionNav' class=" suggestionNav ">
+                      <tag
+                        v-for="tag in tagSuggestions"
+                        :key="tag.setID"
+                        :tag="tag"
+                        :display="'thumb'"
+                        hide="remove lens"
+                        v-on:main="addToQuery(tag)"
+                        v-on:include="addToQuery(tag)"
+                        v-on:exclude="addToQuery(tag)"
+                        v-on:focus="addToQuery(tag)"
+                        v-on:pin="addToQuery(tag)"
+                      >
                     </tag>
-  									</div>
-  								</div> -->
+                    </div>
+                  </div> -->
             <!-- suggestions un-grouped iso -->
             <div v-if="' none '.indexOf(suggestionDisplay) > -1">
               <isotope ref="together" :list="tagSuggestions" :options='{}' >
@@ -165,6 +165,7 @@
       </div>
       <div class="collapsible-body" style="border-bottom:none;">
         <br/>
+        <tag-suggestions v-if="selectedPane ==='resources'" :tagQuery="tagQuery" v-on:add="addToQuery"></tag-suggestions>
         <div class="right quantity">
           <div>Showing {{resources.length}} of {{resourcesRelated}}</div>
           <div v-if='member.uid'><span v-if="showViewed">Including</span><span v-else>Excluding</span> {{resourcesViewed}} viewed</div>
@@ -252,6 +253,7 @@ import Materialize from 'materialize-css'
 import tag from '@/components/tag'
 import resource from '@/components/resource'
 import search from '@/components/search'
+import tagSuggestions from '@/components/tagSuggestions'
 import infiniteScroll from 'vue-infinite-scroll'
 import Spinner from 'vue-simple-spinner'
 import isotope from 'vueisotope'
@@ -260,7 +262,7 @@ import {QBtn, QIcon, BackToTop, Toast} from 'quasar'
 
 export default {
   name: 'explore',
-  components: { tag, Toast, resource, search, Spinner, isotope, Flickity, QBtn, QIcon },
+  components: { tag, Toast, resource, search, Spinner, isotope, Flickity, QBtn, QIcon, tagSuggestions },
   directives: {infiniteScroll, BackToTop},
   props: ['tagQuery', 'member'],
   data () {
@@ -313,6 +315,9 @@ export default {
     }
   },
   methods: {
+    clearTagQuery () {
+      this.tagQuery = []
+    },
     flicker () { // this looks so stupid. For forcing flickity component to reinitalize
       this.show = false
       this.$nextTick(() => {
@@ -420,16 +425,16 @@ export default {
         $('#login-modal').modal('open')
       }
     },
-    addToQuery (item) {
-      item.connections = 0
-      if (item.persistAction) { // this is handled really poorly...neeed to rethink tag comp. Also, this doesn't work for pin
-        item.status.includeIcon = true
+    addToQuery (tag) {
+      tag.connections = 0
+      if (tag.persistAction) { // this is handled really poorly...neeed to rethink tag comp. Also, this doesn't work for pin
+        tag.status.includeIcon = true
       }
-      if (item.status.focusIcon) {
-        this.focus(item)
+      if (tag.status.focusIcon) {
+        this.focus(tag)
       }
-      if (this.tagQuery.every(x => x.setID !== item.setID)) { // don't add if already in query
-        this.tagQuery.push(item)
+      if (this.tagQuery.every(x => x.setID !== tag.setID)) { // don't add if already in query
+        this.tagQuery.push(tag)
       } else {
         Materialize.toast('Already in query!', 1500)
       }
@@ -489,7 +494,7 @@ export default {
         for (var tagIndex = 0; tagIndex < this.tagQuery.length; tagIndex++) {
           include.push(this.tagQuery[tagIndex].setID)
         }
-        this.tagSuggestions = []
+        // this.tagSuggestions = []
         this.$http.get('/api/set/', {
           params: {
             languageCode: 'en',
@@ -597,6 +602,9 @@ export default {
           }).then(response => {
             if (response.body.length === 0) {
               this.endOfResources = true
+              if (!infinite) {
+                Materialize.toast('No resources found...', 2000)
+              }
             } else if (infinite) {
               this.resources.push.apply(this.resources, response.body)
             } else {
@@ -604,7 +612,7 @@ export default {
             }
             this.loadingResources = false
           }, failed => {
-            Materialize.toast('Something went wrong...')
+            Materialize.toast('Something went wrong...', 2000)
             this.loadingResources = false
           })
         } else { // general query if not logged inconsole.log('getting general')
@@ -621,6 +629,9 @@ export default {
           }).then(response => {
             if (response.body.length === 0) {
               this.endOfResources = true
+              if (!infinite) {
+                Materialize.toast('No resources found...', 2000)
+              }
             } else if (infinite) {
               this.resources.push.apply(this.resources, response.body)
             } else {
@@ -629,7 +640,7 @@ export default {
             this.loadingResources = false
           }, failed => {
             console.log(failed)
-            Materialize.toast('Something went wrong...')
+            Materialize.toast('Something went wrong...', 2000)
             this.loadingResources = false
           })
         }
@@ -814,7 +825,7 @@ export default {
 .collapsible-header {
   position:sticky;
   top:0;
-  z-index: 2;
+  z-index: 22;
   font-weight: 300;
 }
 .collapsible-body {

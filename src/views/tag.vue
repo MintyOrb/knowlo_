@@ -60,7 +60,7 @@
         <search :exclude="$route.params.uid" input-id="syn" v-on:select="addSynonym"></search>
       </div>
       <div class="stepContainer">
-        <isotope ref='withn' :list="within" :options='{}'>
+        <isotope ref='within' :list="within" :options='{}'>
           <tag :tag="tag" v-for="tag in within" :key="tag.tag.uid" :display="tagDisplay" v-on:include="addToQuery(tag)" v-on:exclude="removeWithin(tag.tag.uid)" v-on:focus="addToQuery(tag)" v-on:pin="addToQuery(tag)" hide="remove">
           </tag>
           <!-- v-on:exclude="removeSynonym(tag.tag.uid)" -->
@@ -133,8 +133,13 @@ export default {
     }
   },
   methods: {
+    layout () {
+      this.$refs.syno.layout('masonry')
+      this.$refs.within.layout('masonry')
+      this.$refs.contains.layout('masonry')
+      this.$refs.trans.layout('masonry')
+    },
     init () {
-      console.log('in init')
       this.$http.get('/api/set/' + this.$route.params.uid, {
         params: {
           languageCode: 'en'
@@ -157,6 +162,7 @@ export default {
         if (!this.modalOpen) {
           this.openModal()
         }
+        this.layout()
       }, response => {
         if (!this.modalOpen) {
           this.openModal()
@@ -394,6 +400,9 @@ export default {
   },
   mounted () {
     this.init()
+    setTimeout(() => {
+      this.layout()
+    }, 1500)
     // TODO: set flickity tab in URL
     // this.$refs.body.next()
     // this.$refs.nav.next()

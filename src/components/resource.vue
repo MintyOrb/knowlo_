@@ -67,6 +67,15 @@
 			</span>
 		</div>
 
+    <!-- <q-collapsible :sublabel="'Q: '+ displayQuality.toString().substring(0,4) + ' C: ' + displayComplexity.toString().substring(0,4)" >
+      <div class="">
+				<i  @click="ratingDisplay='global'" @mouseenter="ratingDisplay='global'" class="fa fa-lg fa-globe rating" :class="{'selected': ratingDisplay==='global'}"></i>
+				<i  @click="ratingDisplay='member'" @mouseenter="ratingDisplay='member'" class="fa fa-lg fa-user rating" :class="{'selected': ratingDisplay==='member'}"></i>
+			</div>
+      <q-slider color="orange"  v-model="displayQuality" :min="0" :max="1" :step="0.001" label :label-value="displayQuality.toString().substring(0,4)"/>
+      <q-slider color="blue" v-model="displayComplexity" :min="0" :max="1" :step="0.001" label :label-value="displayComplexity.toString().substring(0,4)"/>
+    </q-collapsible> -->
+
 		<div v-if="display === 'card' " class='card-action'>
  			<span class='left card-bottom'><i class="tiny material-icons">visibility</i>{{trimNumber(re.resource.viewCount,1) || 0}}</span>
 
@@ -90,9 +99,11 @@
 import noUiSlider from 'nouislider'
 import Materialize from 'materialize-css'
 import $ from 'jquery'
+import { QSlider, QCollapsible } from 'quasar'
 
 export default {
   name: 'resource',
+  components: { QSlider, QCollapsible },
   props: {
     re: Object,
     voting: {
@@ -103,8 +114,8 @@ export default {
   },
   data: () => {
     return {
-      displayQuality: null,
-      displayComplexity: null,
+      displayQuality: 0.5,
+      displayComplexity: 0.5,
       ratingDisplay: 'global'
     }
   },
@@ -244,7 +255,14 @@ export default {
       this.$emit('dataupdated')
     },
     ratingDisplay (val) {
-      this.setRatingSliders(val)
+      // this.setRatingSliders(val)
+      if (val === 'global') {
+        this.displayQuality = this.re.globalVote.quality
+        this.displayComplexity = this.re.globalVote.complexity
+      } else {
+        this.displayQuality = this.re.memberVote.quality
+        this.displayComplexity = this.re.memberVote.complexity
+      }
     }
   }
 }

@@ -41,7 +41,7 @@
 
   <!-- main view -->
   <transition name="fade" mode="out-in" appear id='q-app'>
-    <router-view :tag-query="tagQuery" :member="member" style="padding-top:50px" />
+    <router-view v-on:clear="tagQuery = []" :tag-query="tagQuery" :member="member" style="padding-top:50px" />
   </transition>
 
   <footer class="page-footer blue">
@@ -508,5 +508,8 @@ input:not([type]):focus:not([readonly]) + label, input[type=text]:not(.browser-d
   -webkit-transform: translate(-50%,-50%);
       -ms-transform: translate(-50%,-50%);
           transform: translate(-50%,-50%);
+}
+.row {
+  margin: auto!important;
 }
 </style>

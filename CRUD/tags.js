@@ -2,7 +2,7 @@ module.exports = function(app, db){
 
 var shortid = require('shortid');
 
-app.get('/api/tag/search/:text/:exclude?', search);
+app.get('/api/tag/search/:text/:exclude?', search); // autocomplete
 app.get('/api/tag/most', most);
 
 // translation
@@ -73,14 +73,12 @@ function order(req, res){
    ██    ███████ ██   ██ ██      ██
 */
 function query(req, res){
-
-  req.query.exclude = req.query.exclude.concat(req.query.include) // don't return query tags with group
-
+  // TODO: clean this up...separate out into multiple end points.
   var cypher="";
   var scale=""  // for uid of requested scale
   if(req.query.type=='none'){
-    //  set by number of related tagged resources
-   cypher = "MATCH (contentNode:resource)-[:TAGGED_WITH]->(searchSets:synSet) "
+    //  lone sets by number of related tagged resources
+   cypher = "MATCH (contentNode:resource)-[:TAGGED_WITH]->(b:synSet)-[:IN_SET*0..3]->(searchSets:synSet) "
           + "WHERE searchSets.uid IN {searchSets} "
           + "WITH contentNode, COUNT(searchSets) as count "
           + "WHERE count = {searchTagsCount} "
@@ -125,12 +123,12 @@ function query(req, res){
             // + "LIMIT {limit}";// necessary?
   }
 
-  var len = 0;
-  if(req.query.include && req.query.include !== 'undefined'){
-    len = req.query.include.length;
-  } else { // maybe just don't send a get you know won't return anything...
-    req.query.include =[];
+  if(req.query.include === undefined){
+    req.query.include = ['r1Tv1sKbW'] // default to science set if none included...
   }
+  var len = req.query.include.length;
+  req.query.exclude = req.query.exclude.concat(req.query.include) // don't return query tags with group
+
   db.query(cypher, {
     searchSets: req.query.include,
     ignoreTags: req.query.exclude,
@@ -619,10 +617,15 @@ function search(req,res){
 // get most commonly tagged tags
 // TODO: skip/limit - language - disregard/include synonyms? - Tags most tagged to other tags?
 function most(req,res){
-  var cypher = "MATCH (tag:tag)<-[:TAGGED_WITH]-(resource:resource) "
-             + "RETURN tag.english, COUNT(resource) AS score "
+  var cypher = "MATCH (set:synSet)<-[:TAGGED_WITH]-(resource:resource) "
+             + "WITH set, COUNT(resource) AS score "
+             + "MATCH (set)<-[r:IN_SET]-(core:tag)-[lang:HAS_TRANSLATION]->(langNode) "
+             + "WHERE r.order=1 AND lang.languageCode IN [ {code} , 'en' ] "
+             + "RETURN DISTINCT set.uid AS setID, core.url AS url, set AS tag, langNode AS translation, " // order by....?
+
+             + " score "
              + "ORDER BY score DESC limit 10"
-  db.query(cypher, {languageCode: req.query.languageCode || 'en'},function(err, result) {
+  db.query(cypher, {code: req.query.languageCode || 'en'},function(err, result) {
     if (err) console.log(err);
       res.send(result) // resource not found
     })

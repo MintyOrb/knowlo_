@@ -186,7 +186,6 @@ import resource from '@/components/resource'
 import search from '@/components/search'
 import isotope from 'vueisotope'
 import Flickity from 'vue-flickity'
-import 'flickity-as-nav-for'
 import L from 'leaflet'
 import {BackToTop, scroll, AppFullscreen} from 'quasar'
 const { setScrollPosition } = scroll
@@ -247,8 +246,7 @@ export default {
       // weird to wrap a timeout with next tick, but css lags and screws up the layout after transistion
       this.$nextTick(function () {
         window.setTimeout(() => {
-          this.$refs.discussionBin.layout('masonry')
-          this.$refs.relatedBin.layout('masonry')
+          this.layout()
         }, 375)
       })
     },
@@ -330,7 +328,11 @@ export default {
       this.discussion.push(dis)
     },
     layout: function () {
+      if (this.discussion.length > 0) {
+        this.$refs.discussionBin.layout('masonry')
+      }
       this.$refs.relatedBin.layout('masonry')
+      this.$refs.rTagBin.layout('masonry')
     },
     fetchRelated: function () {
       this.$nextTick(() => {

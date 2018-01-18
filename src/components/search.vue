@@ -41,7 +41,7 @@ export default {
       this.input = ''
       this.suggestions = []
       if (item.translation.name.indexOf('Create new tag:') > -1) { // if tag needs to be created
-        this.tag.english = this.translation.name = item.translation.name.substr(17).trim()
+        this.tag.english = this.translation.name = item.translation.name.substr(16).trim()
         if (this.addWithDetail) {
           this.$router.push('/addTag/' + this.translation.name)
         } else {
@@ -58,7 +58,7 @@ export default {
       }, 300)
     },
     quickAdd () {
-      this.$http.post('/api/set', {tag: this.tag, translation: this.translation}).then(response => {
+      this.$http.post('/api/auth/set', {tag: this.tag, translation: this.translation}).then(response => {
         if (response.body.tag) {
           this.$emit('select', response.body)
           Materialize.toast('"' + response.body.translation.name + '"' + ' created!', 3000)
@@ -95,8 +95,6 @@ export default {
     var $input = $('#' + options.inputId)
     if (options.ajaxUrl) {
       var $search = $('#ac')
-      var request
-      var runningRequest = false
       var timeout
       var liSelected
 
@@ -109,10 +107,6 @@ export default {
           this.hidden = true
         } else {
           this.hidden = false
-        }
-
-        if (runningRequest) {
-          request.abort()
         }
 
         if (e.which === 13 && this.input.length > 0 && liSelected[0]) { // select element with enter key
@@ -167,10 +161,8 @@ export default {
         var val = $input.val().toLowerCase()
         if (val.length > options.minLength) {
           timeout = setTimeout(() => { // comment this line to remove timeout
-            runningRequest = true
             this.$http.get(options.ajaxUrl + val + '/' + this.exclude).then(data => {
               this.suggestions = data.body
-              runningRequest = false
               // hide "create new" if a match is found
               if (Object.values(this.suggestions).findIndex(item => this.input.toLowerCase().trim() === item.translation.name.toLowerCase().trim())) {
                 this.suggestions.push({
