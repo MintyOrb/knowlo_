@@ -18,55 +18,41 @@
   								</div>
   							</div>
 
-  							<!-- need a better way to detagine when in sidebar... -->
-  							<div id="hoverPad" v-if="inSidebar">
-  							</div>
-
   							<div class="icons">
   								<div class="rotater">
-  									<div @click="pin" class="mbtn mbtn-icon flexCenter" :class="{showPin: status.pinnedIcon, pinNav: hovering&& inSidebar, hide: hide.indexOf('pin')>-1 }">
+  									<div @click.stop="pin" class="mbtn mbtn-icon flexCenter" :class="{showPin: status.pinnedIcon, hide: hide.indexOf('pin')>-1 }">
   										<i class="fa fa-thumb-tack" style="transform:rotate(-45deg)"></i>
   									</div>
   								</div>
-  								<!-- <div  v-if="true" class="rotater">
-  									<div class="mbtn mbtn-icon flexCenter" :class="{'nope':!tag.group, expandNav: hovering&& inSidebar}">
-  										<i class="fa fa-expand"></i>
-  									</div>
-  								</div> -->
   								<div  class="rotater">
-  									<div @click="lens" class="mbtn mbtn-icon flexCenter" :class="{'showLens': status.lensIcon, expandNav: hovering&& inSidebar, hide: hide.indexOf('lens')>-1 }">
+  									<div @click="lens" class="mbtn mbtn-icon flexCenter" :class="{'showLens': status.lensIcon, hide: hide.indexOf('lens')>-1 }">
   										<i class="material-icons" style="margin-top:15px">more_horiz</i>
   									</div>
   								</div>
-  								<!-- <div  v-if="false" class="rotater">
-  									<div class="mbtn mbtn-icon flexCenter" :class="{showCompress: true, expandNav: hovering&& inSidebar}">
-  										<i class="fa fa-compress"></i>
-  									</div>
-  								</div> -->
   								<div class="rotater">
   									<router-link :to="{ name: 'tag', params: { uid: tag.setID, name: tag.translation.name }}">
-  										<div class="mbtn mbtn-icon flexCenter":class="{showInfo: status.infoIcon, infoNav: hovering && inSidebar, hide: hide.indexOf('info')>-1 }">
+  										<div class="mbtn mbtn-icon flexCenter":class="{showInfo: status.infoIcon, hide: hide.indexOf('info')>-1 }">
   											<i class="fa fa-info" style="padding-right:10px;"></i>
   										</div>
   									</router-link>
   								</div>
   								<div class="rotater">
-  									<div @click="remove" class="mbtn mbtn-icon flexCenter" :class="{'showRemove': status.removeIcon, removeNav: hovering && inSidebar, hide: hide.indexOf('remove')>-1 }">
+  									<div @click="remove" class="mbtn mbtn-icon flexCenter" :class="{'showRemove': status.removeIcon, hide: hide.indexOf('remove')>-1 }">
   										<i class="fa fa-times"></i>
   									</div>
   								</div>
   								<!-- <div class="rotater">
-  									<div @click="exclude" class="mbtn mbtn-icon flexCenter" :class="{showMinus: status.excludeIcon, excludeNav: hovering&& inSidebar, hide: hide.indexOf('exclude')>-1 }">
+  									<div @click="exclude" class="mbtn mbtn-icon flexCenter" :class="{showMinus: status.excludeIcon, hide: hide.indexOf('exclude')>-1 }">
   										<i class="fa fa-minus"></i>
   									</div>
   								</div> -->
   								<div class="rotater">
-  									<div @click="include" class="mbtn mbtn-icon flexCenter" :class="{showPlus: status.includeIcon, includeNav: hovering&& inSidebar, hide: hide.indexOf('include')>-1 }">
+  									<div @click="include" class="mbtn mbtn-icon flexCenter" :class="{showPlus: status.includeIcon, hide: hide.indexOf('include')>-1 }">
   										<i class="fa fa-plus"></i>
   									</div>
   								</div>
   								<div class="rotater">
-  									<div @click="focus" class="mbtn mbtn-icon flexCenter"  :class="{showFocus: status.focusIcon, focusNav: hovering&& inSidebar, hide: hide.indexOf('focus')>-1 }">
+  									<div @click="focus" class="mbtn mbtn-icon flexCenter"  :class="{showFocus: status.focusIcon, hide: hide.indexOf('focus')>-1 }">
   										<i class="fa fa-crosshairs"></i>
   									</div>
   								</div>
@@ -87,8 +73,8 @@
   			</span>
   		</div>
 
-  		<div @click="main" v-if="display==='list' || display==='card'" class='cont'>
-  				<span class='taglist-title'>
+  		<div v-if="display==='list' || display==='card'" class='cont'>
+  				<span @click="main" class='taglist-title'>
   					<span class='taglist-title-left'>
   						<!-- <span class='score'>8</span>
   						<span class='vote'>
@@ -106,18 +92,16 @@
   						<i @click.stop.prevent="" class="material-icons  more" :class="'dd'+tag.setID" :data-activates='tag.setID' >more_horiz</i>
   						<!-- <i @click.prevent="" class="material-icons  more" :class="'dd'+tag.setID" :data-activates='tag.setID' >keyboard_arrow_down</i> -->
   					</span>
-  					<ul :id='tag.setID' class='dropdown-content  tag-dropdown'>
-  						<li @click="focus"><a><i class="fa fa-crosshairs"></i>Focus</a></li>
-  						<li @click="include"><a><i class="fa fa-plus"></i>Add</a></li>
-  						<li @click="pin"><a><i class="fa fa-thumb-tack"></i>Pin</a></li>
-  						<!-- <li @click="lens"><a><i class="fa fa-crosshairs"></i>Cross Section</a></li> -->
-  						<li @click="remove"><a><i class="fa fa-times"></i>Remove</a></li>
-  						<li @click=""><router-link :to="{ name: 'tag', params: { uid: tag.setID, name: tag.translation.name }}"><i class="fa fa-info"></i>tag Page</router-link></li>
-  					</ul>
-
 
   				</span>
-
+          <ul :id='tag.setID' class='dropdown-content  tag-dropdown'>
+            <li @click="focus"><a><i class="fa fa-crosshairs"></i>Focus</a></li>
+            <li @click="include"><a><i class="fa fa-plus"></i>Add</a></li>
+            <li @click="pin"><a><i class="fa fa-thumb-tack"></i>Pin</a></li>
+            <!-- <li @click="lens"><a><i class="fa fa-crosshairs"></i>Cross Section</a></li> -->
+            <li @click="remove"><a><i class="fa fa-times"></i>Remove</a></li>
+            <li @click=""><router-link :to="{ name: 'tag', params: { uid: tag.setID, name: tag.translation.name }}"><i class="fa fa-info"></i>tag Page</router-link></li>
+          </ul>
   				<!-- <div class='tag-definition'>
   					definition here
   				</div> -->
@@ -154,9 +138,8 @@ export default {
       default: true
     }
   },
-  data: () => {
+  data () {
     return {
-      inSidebar: false,
       hovering: false,
       status: {
         pinnedIcon: false,
@@ -171,7 +154,7 @@ export default {
   },
   methods: {
     name (uid, val) {
-      this.$http.put('/god/name/' + uid + '/' + val).then(response => {
+      this.$http.put('/api/auth/god/name/' + uid + '/' + val).then(response => {
         if (response.body) {
           Materialize.toast('changed name', 4000)
         } else {
@@ -182,8 +165,7 @@ export default {
       })
     },
     order (tagID, order) {
-      console.log(tagID, order)
-      this.$http.put('/god/order/' + tagID + '/' + order + '/' + this.$route.params.uid).then(response => {
+      this.$http.put('/api/auth/god/order/' + tagID + '/' + order + '/' + this.$route.params.uid).then(response => {
         if (response.body) {
           Materialize.toast('changed order', 4000)
         } else {
@@ -194,11 +176,11 @@ export default {
       })
     },
     tagAction (action) {
-
+      // TODO replace individual functions...
     },
     main () {
       if (this.persistAction) {
-        this.status.includeIcon = !this.status.includeIcon
+        this.status.includeIcon = true
       }
       this.tag.status = this.status
       this.$emit('main', this.tag)
@@ -211,9 +193,7 @@ export default {
       this.$emit('remove', this.tag)
     },
     include () {
-      // if (this.persistAction) {
       this.status.includeIcon = !this.status.includeIcon
-      // }
       this.tag.status = this.status
       this.$emit('include', this.tag)
     },
@@ -221,22 +201,22 @@ export default {
       if (this.persistAction) {
         this.status.excludeIcon = !this.status.excludeIcon
       }
-      this.tag.status = this.status
-      this.$emit('exclude', this.tag)
+      this.$nextTick(() => {
+        this.tag.status = this.status
+        this.$emit('exclude', this.tag)
+      })
     },
     focus () {
-      // if (this.persistAction) {
       this.status.focusIcon = !this.status.focusIcon
-      // }
+      this.status.includeIcon = !this.status.includeIcon
       this.tag.status = this.status
-      this.status.includeIcon = true
       this.$emit('focus', this.tag)
     },
     pin () {
-      // if (this.persistAction) {
+      if (!this.status.pinnedIcon) {
+        this.status.includeIcon = !this.status.includeIcon
+      }
       this.status.pinnedIcon = !this.status.pinnedIcon
-      // }
-      this.status.includeIcon = true
       this.tag.status = this.status
       this.$emit('pin', this.tag)
     },
@@ -261,14 +241,9 @@ export default {
     }
   },
   mounted () {
-    this.$emit('created')
     if (this.tag.status) {
       this.status = this.tag.status
     }
-    if (this.$parent.$el && this.$parent.$el._prevClass === 'tagQuery') { // stupid way to change css. cake component param/option instead
-      this.inSidebar = true // defaults to false
-    }
-
     // setup info dropdown
     $('.dd' + this.tag.setID).dropdown({
       alignment: 'right',
@@ -435,42 +410,6 @@ export default {
 /*increase hover target for info icon*/
 .fa-info {
   width: 20px
-}
-
-
-#hoverPad{
-  width: 214px;
-  height: 52px;
-  position: absolute;
-  left: -219px;
-  top: 4px;
-}
-.focusNav{
-  transform: translateY(-198px)!important;
-  color: white!important;
-}
-.includeNav {
-  transform: translate(208px, -123px) rotate(-210deg)!important;
-  color: white!important;
-}
-.excludeNav{
-  transform: translate(211px, 119px) rotate(-150deg)!important;
-  color: white!important;
-}
-.pinNav {
-  transform: translate(-125px,-74px) rotate(30deg)!important;
-  color: white!important;
-}
-.removeNav{
-  transform: translate(-78px, -60px)!important;
-  color: white!important;
-}
-.infoNav{
-  transform: translate(-5px, 120px) rotate(-90deg)!important;
-  color: white!important;
-}
-.expandNav{
-  transform: translateY(0em) rotate(-30deg)!important;
 }
 
 .more {

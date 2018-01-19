@@ -54,10 +54,11 @@
 
       <div class="stepContainer">
         <isotope ref='syno' :list="synonyms" :options='{}'>
-          <tag v-for="tag in synonyms" :key="tag.tag.uid" :tag="tag" :display="tagDisplay" v-on:include="addToQuery(tag)" v-on:exclude="removeSynonym(tag.tag.uid)" v-on:focus="addToQuery(tag)" v-on:pin="addToQuery(tag)" hide="remove">
+          <tag v-for="tag in synonyms" :key="tag.tag.uid" :tag="tag" :display="'godMode'" v-on:include="addToQuery(tag)" v-on:exclude="removeSynonym(tag.tag.uid)" v-on:focus="addToQuery(tag)" v-on:pin="addToQuery(tag)" hide="remove">
           </tag>
         </isotope>
-        <search :exclude="$route.params.uid" input-id="syn" v-on:select="addSynonym"></search>
+        <search v-if='addSyn' :exclude="$route.params.uid" input-id="syn" v-on:select="addSynonym"></search>
+        <search v-if='mergeSyn' :exclude="$route.params.uid" input-id="syn" v-on:select="mergeSynonym"></search>
       </div>
       <div class="stepContainer">
         <isotope ref='within' :list="within" :options='{}'>
@@ -118,6 +119,8 @@ export default {
       definitions: [],
       translations: [],
       synonyms: [],
+      addSyn: false,
+      mergeSyn: false,
       groups: [],
       within: [],
       contains: [],
@@ -279,7 +282,7 @@ export default {
         Materialize.toast('Something went wrong...are you online?', 4000)
       })
     },
-    addSynonym: function (synonym) { // TODO: this merges sets...need a separate method for adding tag to set
+    mergeSynonym: function (synonym) { // TODO: this merges sets...need a separate method for adding tag to set
       this.$http.put('/api/auth/set/' + this.tag.setID + '/synonym/' + synonym.setID).then(response => {
         if (response.body) {
           Materialize.toast('Added!', 4000)

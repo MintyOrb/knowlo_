@@ -143,10 +143,10 @@
           :key="tag.tag.uid"
           :tag="tag"
           display="list"
-          v-on:include="addToQuery(tag); close();"
+          v-on:include="addToQuery(tag)"
           v-on:remove="removeTag(tag.setID)"
-          v-on:focus="addToQuery(tag); close();"
-          v-on:pin="addToQuery(tag); close();">
+          v-on:focus="addToQuery(tag)"
+          v-on:pin="addToQuery(tag)">
           </tag>
         </isotope>
         <search exclude="" input-id="resourceTest" v-on:select="addTag"></search>
@@ -165,7 +165,7 @@
           :re="re"
           :key="re.resource.uid"
           :display="relatedDisplay"
-          :voting='false'>
+          >
           </resource>
         </isotope>
       </div>
@@ -376,6 +376,7 @@ export default {
     },
     addToQuery: function (item) {
       this.$emit('add', item)
+      this.close()
     },
     discussionIsotope: function () {
       return {

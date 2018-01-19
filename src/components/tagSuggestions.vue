@@ -59,7 +59,10 @@ export default {
       this.displayed = 'subGroup'
     },
     showAllGroups () {
-      this.tags = this.groupSet.map(x => x.group[0])
+      this.tags = this.groupSet.map(x => {
+        x.group[0].connections = x.contains.length // show number of tags contained
+        return x.group[0]
+      })
       this.$nextTick(() => {
         this.$refs.rtags.layout()
       })
@@ -140,9 +143,6 @@ export default {
         this.$refs.rtags.layout()
       })
     }
-  },
-  mounted () {
-    this.fetch()
   },
   watch: {
     tagQuery (val) {

@@ -187,9 +187,9 @@ export default {
 <style src="materialize-css/dist/css/materialize.css"></style>
 <style src="flickity/dist/flickity.min.css"></style>
 <style src="leaflet/dist/leaflet.css"></style>
-<style src="materialize-css/extras/noUiSlider/nouislider.css"></style>
 <style src="firebaseui/dist/firebaseui.css"></style>
 <style>
+/* * {outline: 1px solid black;} */
 .modal .modal-content {
   padding: 0px;
 }

@@ -51,29 +51,13 @@
 			</router-link>
 		</div>
 
-		<div v-if="voting & display !='thumb'" class="margin20" >
-			<div class="">
-				<i  @click="ratingDisplay='global'" @mouseenter="ratingDisplay='global'" class="fa fa-lg fa-globe rating" :class="{'selected': ratingDisplay==='global'}"></i>
-				<i  @click="ratingDisplay='member'" @mouseenter="ratingDisplay='member'" class="fa fa-lg fa-user rating" :class="{'selected': ratingDisplay==='member'}"></i>
-			</div>
-			<span>
-				<span style="font-weight:300" >Quality</span><span v-if="displayQuality" style="font-weight:300" class='right'>{{displayQuality.toFixed(2).replace(/^0+/, '')}}</span>
-				<div style="margin-top:5px;margin-bottom:5px" :id="'quality-slider-'+_uid"></div>
-				<!-- <span style="font-weight:300" >4.1</span> -->
-			</span>
-			<span>
-				<span style="font-weight:300" >Complexity</span><span v-if="displayComplexity" style="font-weight:300" class='right'>{{displayComplexity.toFixed(2).replace(/^0+/, '')}}</span>
-				<div style="margin-top:5px;margin-bottom:5px" :id="'complexity-slider-'+_uid"></div>
-			</span>
-		</div>
-
-    <!-- <q-collapsible :sublabel="'Q: '+ displayQuality.toString().substring(0,4) + ' C: ' + displayComplexity.toString().substring(0,4)" >
+    <!-- <q-collapsible :sublabel="voteLabel()" >
       <div class="">
 				<i  @click="ratingDisplay='global'" @mouseenter="ratingDisplay='global'" class="fa fa-lg fa-globe rating" :class="{'selected': ratingDisplay==='global'}"></i>
 				<i  @click="ratingDisplay='member'" @mouseenter="ratingDisplay='member'" class="fa fa-lg fa-user rating" :class="{'selected': ratingDisplay==='member'}"></i>
 			</div>
-      <q-slider color="orange"  v-model="displayQuality" :min="0" :max="1" :step="0.001" label :label-value="displayQuality.toString().substring(0,4)"/>
-      <q-slider color="blue" v-model="displayComplexity" :min="0" :max="1" :step="0.001" label :label-value="displayComplexity.toString().substring(0,4)"/>
+      <q-slider @change="qualityChange" color="orange"  v-model="displayQuality" :min="0" :max="1" :step="0.001" label :label-value="displayQuality | strr"/>
+      <q-slider @change="complexityChange" color="blue" v-model="displayComplexity" :min="0" :max="1" :step="0.001" label :label-value="displayComplexity | strr"/>
     </q-collapsible> -->
 
 		<div v-if="display === 'card' " class='card-action'>
@@ -96,7 +80,6 @@
 </template>
 
 <script>
-import noUiSlider from 'nouislider'
 import Materialize from 'materialize-css'
 import $ from 'jquery'
 import { QSlider, QCollapsible } from 'quasar'
@@ -106,31 +89,44 @@ export default {
   components: { QSlider, QCollapsible },
   props: {
     re: Object,
-    voting: {
-      type: Boolean,
-      default: true
-    },
     display: String
   },
   data: () => {
     return {
-      displayQuality: 0.5,
-      displayComplexity: 0.5,
-      ratingDisplay: 'global'
+      displayQuality: 0,
+      displayComplexity: 0,
+      ratingDisplay: ''
     }
   },
   methods: {
+    voteLabel () {
+      return 'hi'
+      // 'Q: '+ displayQuality.toString().substring(0,4) + ' C: ' + displayComplexity.toString().substring(0,4)
+    },
+    qualityChange (val) {
+      console.log('qual chng ', val)
+      if (val !== this.re.memberVote.quality) {
+        this.re.memberVote.quality = val
+        this.vote()
+      }
+    },
+    complexityChange (val) {
+      if (val !== this.re.memberVote.complexity) {
+        this.re.memberVote.complexity = val
+        this.vote()
+      }
+      console.log('complexity chng ', val)
+    },
     selected () {
       this.$emit('selected')
     },
     vote () {
-      this.$http.put('/api/resource/' + this.re.resource.uid + '/vote', {vote: this.re.memberVote}).then(response => {
+      this.$http.put('/api/auth/resource/' + this.re.resource.uid + '/vote', {vote: this.re.memberVote}).then(response => {
         if (response.body) {
           Materialize.toast('voted!', 2000)
           this.re.globalVote = response.body.globalVote
           this.re.votes = response.body.votes
           this.$emit('vote-cast')
-          this.setRatingSliders('member')
           this.ratingDisplay = 'member'
         } else {
           Materialize.toast('Something went wrong...', 4000)
@@ -139,14 +135,14 @@ export default {
         if (response.status === 401) {
           Materialize.toast('You must be logged in to vote!', 4000)
           $('#login-modal').modal('open')
-          this.setRatingSliders('global')
+          this.ratingDisplay = 'global'
         } else {
           Materialize.toast('Something went wrong...are you online?', 4000)
         }
       })
     },
     deleteResource (uid) {
-      this.$http.delete('/api/resource/' + uid + '/full').then(response => {
+      this.$http.delete('/api/auth/resource/' + uid + '/full').then(response => {
         if (response.body) {
           Materialize.toast('deleted resource', 4000)
         } else {
@@ -167,95 +163,14 @@ export default {
           }
         }
         return num.toFixed(digits).replace(rx, '$1')
-      } else if (this.voting && typeof (num) !== 'number') {
-        console.log('not number... ', typeof (num))
-        console.log(num)
-      }
-    },
-    initSlider () {
-      if (this.voting) {
-        console.log('voting is true')
-        var quality = document.getElementById('quality-slider-' + this._uid)
-        noUiSlider.create(quality, {
-          start: 0.5,
-          connect: [true, false],
-          behavior: 'tap-drag-hover',
-          range: {
-            'min': 0,
-            'max': 1
-          }
-        })
-        quality.noUiSlider.on('change', (a, b, value) => { // listen for vote
-          if (this.re.memberVote && this.re.memberVote.quality !== value[0]) {
-            this.re.memberVote.quality = value[0]
-            this.vote()
-          } else if (!this.re.memberVote) { // prevents vote trigger on resource init
-            this.re.memberVote = {}
-            this.vote()
-          }
-        })
-
-        var complexity = document.getElementById('complexity-slider-' + this._uid)
-        noUiSlider.create(complexity, {
-          start: 0.5,
-          connect: [true, false],
-          behavior: 'tap-drag-hover',
-          range: {
-            'min': 0,
-            'max': 1
-          }
-        })
-        complexity.noUiSlider.on('change', (a, b, value) => {
-          if (this.re.memberVote && this.re.memberVote.complexity !== value[0]) {
-            this.re.memberVote.complexity = value[0]
-            this.vote()
-          } else if (!this.re.memberVote) {
-            this.re.memberVote = {}
-            this.vote()
-          }
-        })
-      }
-    },
-    setRatingSliders (disp) {
-      if (disp === 'global' && this.re.globalVote && this.voting && this.re.globalVote.quality) {
-        this.$nextTick(x => {
-          var quality = document.getElementById('quality-slider-' + this._uid)
-          quality.noUiSlider.set(this.re.globalVote.quality)
-          var complexity = document.getElementById('complexity-slider-' + this._uid)
-          complexity.noUiSlider.set(this.re.globalVote.complexity)
-        })
-        this.displayQuality = this.re.globalVote.quality
-        this.displayComplexity = this.re.globalVote.complexity
-      } else if (this.re.memberVote) {
-        this.$nextTick(x => {
-          if (document.getElementById('quality-slider-' + this._uid)) { // TODO: figure out why element is sometimes not found when switching display types? Race condition?
-            var quality = document.getElementById('quality-slider-' + this._uid)
-            quality.noUiSlider.set(this.re.memberVote.quality)
-            var complexity = document.getElementById('complexity-slider-' + this._uid)
-            complexity.noUiSlider.set(this.re.memberVote.complexity)
-          }
-        })
-        this.displayQuality = this.re.memberVote.quality
-        this.displayComplexity = this.re.memberVote.complexity
-      } else {
-        this.ratingDisplay = 'global'
       }
     }
   },
   mounted () {
-    this.initSlider()
-    this.$on('dataupdated', x => {
-      this.setRatingSliders('member')
-    })
-    this.setRatingSliders('global')
+    this.ratingDisplay = 'global'
   },
   watch: {
-    re (x, b) {
-      console.log('data updated')
-      this.$emit('dataupdated')
-    },
     ratingDisplay (val) {
-      // this.setRatingSliders(val)
       if (val === 'global') {
         this.displayQuality = this.re.globalVote.quality
         this.displayComplexity = this.re.globalVote.complexity
@@ -263,6 +178,16 @@ export default {
         this.displayQuality = this.re.memberVote.quality
         this.displayComplexity = this.re.memberVote.complexity
       }
+    }
+  },
+  filters: {
+    strr (val) {
+      if (val === null) return 'n/a'
+      return val.toString().substring(0, 4)
+    },
+    numm (val) {
+      if (val === null) return 0
+      return val
     }
   }
 }
@@ -306,7 +231,7 @@ export default {
 		border-top: none!important;
 }
 .list .rText {
-  font-size: 14px;
+  font-size: 18px;
 }
 .title {
     font-size: 18px;

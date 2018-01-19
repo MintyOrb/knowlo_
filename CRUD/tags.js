@@ -45,7 +45,7 @@ app.post('/api/auth/set', create);         // create (or update, if present) a t
 app.delete('/api/auth/set/:setID', deleteCore);   // delete tag core node and relationships....and translations?
 app.put('/api/auth/set/:sID/:rID/newTopIcon', newTopIcon)
 
-app.put('/api/god/name/:uid/:name', name);
+app.put('/api/auth/god/name/:uid/:name', name);
 function name(req, res){
   var cypher = "MATCH (n:translation {uid: {uid}}) set n.name={name}  return n "
    db.query(cypher, { name: req.params.name, uid: req.params.uid },function(err, result) {
@@ -53,7 +53,7 @@ function name(req, res){
      res.send(result)
    })
 }
-app.put('/api/god/order/:tagID/:order/:setID', order);
+app.put('/api/auth/god/order/:tagID/:order/:setID', order);
 function order(req, res){
   var cypher = "MATCH (n {uid: {tagID}})-[r]-(s:synSet {uid: {setID}}) set r.order={order}  return n "
    db.query(cypher, {

@@ -169,6 +169,7 @@
         <div class="right quantity">
           <div>Showing {{resources.length}} of {{resourcesRelated}}</div>
           <div v-if='member.uid'><span v-if="showViewed">Including</span><span v-else>Excluding</span> {{resourcesViewed}} viewed</div>
+
         </div>
         <!-- <transition name="fade">
 							<div>
@@ -209,8 +210,12 @@
           <!-- results all together -->
           <transition name="fade">
             <div v-if="!crossSection" v-infinite-scroll="infinite" infinite-scroll-disabled="busy" infinite-scroll-distance="10" infinite-scroll-throttle-delay="1000" infinite-scroll-immediate-check="false">
-              <isotope ref="resourceBin" :list="resources" :options='{}' id="container">
-                <resource v-for="re in resources" :key="re.resource.uid" :re="re" :display="resourceDisplay" :class="{'listFullWidth': resourceDisplay=='list'}" :voting='false'>
+              <isotope ref="resourceBin" :list="resources" :options='{}'>
+                <resource v-for="re in resources"
+                :key="re.resource.uid"
+                :re="re"
+                :display="resourceDisplay"
+                :class="{'listFullWidth': resourceDisplay=='list'}">
                 </resource>
               </isotope>
               <Spinner v-show='loadingResources'></Spinner>
@@ -230,6 +235,7 @@
               <span @click="random" class='btn-floating hoverable btn-large waves-effect waves-light red'><i class="fa fa-random fa-2x "></i></span>
             </div>
           </div>
+
           <q-btn
             v-back-to-top.animate="{offset: 500, duration: 200}"
             round
@@ -286,8 +292,6 @@ export default {
       orderby: 'quality', // order for returned resources (quality, complexity, number of views, etc.)
       descending: true, // should resources be returned in ascending or descending order
       crossSectionNav: {
-        // asNavFor: '#crossSectionSteps',
-        // wrapAround: true,
         pageDots: false,
         prevNextButtons: false,
         accessibility: false // to prevent jumping when focused
@@ -300,7 +304,6 @@ export default {
         dragThreshold: 40 // play around with this more?
       },
       suggestionNav: {
-        // asNavFor: '#suggestionSteps',
         pageDots: false,
         prevNextButtons: true,
         accessibility: false
@@ -318,7 +321,7 @@ export default {
     clearTagQuery () {
       this.tagQuery = []
     },
-    flicker () { // this looks so stupid. For forcing flickity component to reinitalize
+    flicker () { // this looks very stupid. For forcing flickity component in tag directory to reinitalize
       this.show = false
       this.$nextTick(() => {
         setTimeout(() => {
@@ -334,25 +337,15 @@ export default {
       this.$refs.steps.selectCell(index)
     },
     setOrderAndDescending (by) {
-      console.log(' in set order and esc')
-
       this.orderby = by
       Cookies.set('orderby', by)
       Cookies.set('descending', this.descending)
 
       Toast.create({
         html: '<span class="thin">Order by ' + this.orderby + ', ' + (this.descending ? 'high to low' : 'low to high</span>'),
-        // icon: 'alarm_add',
         timeout: 1500,
         color: 'white',
-        bgColor: 'black',
-        button: {
-          label: 'Undo',
-          handler () {
-            // Specify what to do when button is clicked/tapped
-          },
-          color: '#000'
-        }
+        bgColor: 'black'
       })
       this.fetchResources()
     },
@@ -383,19 +376,6 @@ export default {
       while (tIndex--) {
         if (!this.tagQuery[tIndex].status.pinnedIcon && this.tagQuery[tIndex].setID !== set.setID) this.tagQuery.splice(tIndex, 1)
       }
-    },
-    addToFrom (tag, to, from) { /// this is all stupid and needs to be re thought.
-      if (to) {
-        this.addTo(tag, to)
-      }
-      if (from) {
-        this.removeFrom(tag, from)
-      }
-
-      this.filter('keywords')
-    },
-    addTo (item, theArray) {
-      theArray.push(item)
     },
     removeFrom (item, theArray) {
       for (var i = theArray.length - 1; i >= 0; i--) {
@@ -482,7 +462,7 @@ export default {
         this.$refs.tagQuery.layout('masonry')
       }
       if (this.selectedPane === 'resources' && this.$refs.resourceBin && (!this.crossSection || this.crossSection.length === 0)) {
-        this.$refs.resourceBin.layout('masonry')
+        this.$refs.resourceBin.layout()
       }
     },
     getTags () {
