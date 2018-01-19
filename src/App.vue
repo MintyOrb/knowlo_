@@ -395,9 +395,8 @@ and (max-device-width : 480px) { /* portrait tablets, portrait iPad, landscape e
 .metaNav {
     position: sticky;
     top: 0;
-    height: 40px;
     z-index: 1000;
-    background-color: white;
+    background-color: #027be3;
     box-shadow: 0 5px 5px 0 rgba(0,0,0,0.2), 0 7px 11px 0 rgba(0,0,0,0.19);
     display: flex;
     align-items: center;

@@ -55,9 +55,9 @@
     <!-- <div class="metaNav"> -->
     <div class="metaNav" >
       <!-- <i @click="toggleFullScreen()" class="material-icons left">fullscreen</i> -->
-      <span @click="selectSection(i)" v-for="step, i in resourceSection">
-        {{step}}
-      </span>
+      <q-tabs>
+        <q-tab @click="selectSection(i)" v-for="step, i in resourceSection" :key="i" slot="title" :label="step" />
+      </q-tabs>
     </div>
     <!-- </div> -->
     <flickity ref='flickBody' :options="flickBody" class="resourceSections">
@@ -188,13 +188,13 @@ import search from '@/components/search'
 import isotope from 'vueisotope'
 import Flickity from 'vue-flickity'
 import L from 'leaflet'
-import {BackToTop, scroll, AppFullscreen} from 'quasar'
+import {BackToTop, scroll, AppFullscreen, QTabs, QTab} from 'quasar'
 const { setScrollPosition } = scroll
 
 export default {
   props: ['member'],
   name: 'resourcev',
-  components: { isotope, search, tag, resource, Flickity, addResource },
+  components: { isotope, search, tag, resource, Flickity, addResource, QTabs, QTab },
   directives: {BackToTop},
   data: function () {
     return {

@@ -165,12 +165,12 @@
       </div>
       <div class="collapsible-body" style="border-bottom:none;">
         <br/>
-        <tag-suggestions v-if="selectedPane ==='resources'" :tagQuery="tagQuery" v-on:add="addToQuery"></tag-suggestions>
         <div class="right quantity">
           <div>Showing {{resources.length}} of {{resourcesRelated}}</div>
           <div v-if='member.uid'><span v-if="showViewed">Including</span><span v-else>Excluding</span> {{resourcesViewed}} viewed</div>
-
         </div>
+        <tag-suggestions v-if="selectedPane ==='resources'" :tagQuery="tagQuery" v-on:add="addToQuery"></tag-suggestions>
+
         <!-- <transition name="fade">
 							<div>
 								<tag v-for="tag in base"

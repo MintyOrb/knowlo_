@@ -21,9 +21,9 @@
   <!-- flick navigation for isotope containers -->
   <div class="tagMeta">
     <div class="metaNav tagNav">
-        <span @click="selectSection(i)" v-for="step, i in tagSection">
-          {{step}}
-        </span>
+      <q-tabs>
+        <q-tab @click="selectSection(i)" v-for="step, i in tagSection" :key="i" slot="title" :label="step" />
+      </q-tabs>
     </div>
     <!-- isotope contianers -->
     <flickity ref='flickBody' class="tagSections" :options="flickBody">
@@ -54,7 +54,7 @@
 
       <div class="stepContainer">
         <isotope ref='syno' :list="synonyms" :options='{}'>
-          <tag v-for="tag in synonyms" :key="tag.tag.uid" :tag="tag" :display="'godMode'" v-on:include="addToQuery(tag)" v-on:exclude="removeSynonym(tag.tag.uid)" v-on:focus="addToQuery(tag)" v-on:pin="addToQuery(tag)" hide="remove">
+          <tag v-for="tag in synonyms" :key="tag.tag.uid" :tag="tag" :display="'list'" v-on:include="addToQuery(tag)" v-on:exclude="removeSynonym(tag.tag.uid)" v-on:focus="addToQuery(tag)" v-on:pin="addToQuery(tag)" hide="remove">
           </tag>
         </isotope>
         <search v-if='addSyn' :exclude="$route.params.uid" input-id="syn" v-on:select="addSynonym"></search>
@@ -96,11 +96,12 @@ import search from '@/components/search'
 import resource from '@/components/resource'
 import tag from '@/components/tag'
 import Flickity from 'vue-flickity'
+import { QTabs, QTab } from 'quasar'
 
 export default {
   name: 'tagv',
   props: ['tagQuery', 'member'],
-  components: { isotope, addResource, search, tag, resource, Flickity },
+  components: { isotope, addResource, search, tag, resource, Flickity, QTabs, QTab },
   data: function () {
     return {
       tag: {
