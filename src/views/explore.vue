@@ -199,7 +199,13 @@
               <div id='crossSectionSteps' class=" crossSectionSteps">
                 <div v-for="step in crossSection" class="">
                   <isotope :ref='"resourceBin" + step.setID' :list="resources" :options='{}'>
-                    <resource :key="re.resource.uid" v-for="re in resources" v-if="re.tagIDs.includes(step.setID)" :re="re" :display="resourceDisplay">
+                    <resource :key="re.resource.uid"
+                      v-for="re in resources"
+                      v-if="re.tagIDs.includes(step.setID)"
+                      :re="re"
+                      :display="resourceDisplay"
+                      v-on:changedDisplay="layout"
+                    >
                     </resource>
                   </isotope>
                 </div>
@@ -212,10 +218,12 @@
             <div v-if="!crossSection" v-infinite-scroll="infinite" infinite-scroll-disabled="busy" infinite-scroll-distance="10" infinite-scroll-throttle-delay="1000" infinite-scroll-immediate-check="false">
               <isotope ref="resourceBin" :list="resources" :options='{}'>
                 <resource v-for="re in resources"
-                :key="re.resource.uid"
-                :re="re"
-                :display="resourceDisplay"
-                :class="{'listFullWidth': resourceDisplay=='list'}">
+                  :key="re.resource.uid"
+                  :re="re"
+                  :display="resourceDisplay"
+                  v-on:changedDisplay="layout"
+                  :class="{'listFullWidth': resourceDisplay=='list'}"
+                >
                 </resource>
               </isotope>
               <Spinner v-show='loadingResources'></Spinner>

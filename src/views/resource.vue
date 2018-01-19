@@ -162,6 +162,7 @@
           <resource
           v-for="re in related"
           v-on:selected="toTop"
+          v-on:changedDisplay="layout"
           :re="re"
           :key="re.resource.uid"
           :display="relatedDisplay"
@@ -486,6 +487,13 @@ export default {
     discussionFilter: function (a, b) {
       if (this.$refs.discussionBin) { // don't try to filter when there are no comments
         this.$refs.discussionBin.filter('type')
+      }
+    },
+    relatedDisplay: function (a, b) {
+      if (a !== b) {
+        setTimeout(() => {
+          this.layout()
+        }, 300)
       }
     },
     'member': function (member) {

@@ -466,7 +466,7 @@ and (max-device-width : 480px) { /* portrait tablets, portrait iPad, landscape e
     }
     .resourceStep{
       width:100vw!important;
-      padding: 20px;
+      /* padding: 20px; */
     }
 }
 .discussion{
