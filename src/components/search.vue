@@ -1,9 +1,7 @@
 <template>
   <div class="input-field ">
-		<i class="material-icons prefix">search</i>
-		<input type="text" v-on:click.stop.prevent="" :id="inputId" class="search" v-model="input"  @focus="hidden=false" @blur="delayBlur">
-		<label :for="inputId" >{{holderText}}</label>
-		<ul id="ac" class="dropdown-content" style="position:absolute" :class="{ hide: hidden}">
+    <q-input type="text" float-label='Search' v-on:click.stop.prevent=""  class="search" v-model="input"  @focus="hidden=false" @blur="delayBlur"/>
+    <ul id="ac" class="dropdown-content" style="position:absolute" :class="{ hide: hidden}">
 			<li v-for="suggestion in suggestions" @click.stop.prevent='pick(suggestion)'>
 				<img v-if="suggestion.tag.iconURL" :src="suggestion.tag.iconURL" class="left">
 				<span><i v-if="suggestion.new" class='material-icons  left'>add</i>{{suggestion.translation.name}}<span v-if="$route.name !='addTag' && suggestion.new" @click="addWithDetail = true"><i class='material-icons right addDetail'>playlist_add</i></span></span>
@@ -14,10 +12,12 @@
 <script>
 import $ from 'jquery'
 import Materialize from 'materialize-css'
+import { QInput } from 'quasar'
 // adapted from  http://stackoverflow.com/a/42757285/2061741
 // TODO: there is a LOT of direct DOM manipulation here that probably ought to be cleaned up.
 export default {
   props: ['ajaxUrl', 'inputId', 'exclude', 'holderText'],
+  components: { QInput },
   name: 'search',
   data: () => {
     return {
@@ -86,6 +86,7 @@ export default {
     }
   },
   mounted () {
+    $('input').attr('id', this.inputId) // hacky way to grab text from input. Should probably just impliment quasar searh/autocomplete...
     var options = {
       inputId: this.inputId || 'search-input',
       ajaxUrl: this.ajaxUrl || '/api/tag/search/',
@@ -97,7 +98,6 @@ export default {
       var $search = $('#ac')
       var timeout
       var liSelected
-
       $input.on('keyup', (e) => {
         if (timeout) { // comment to remove timeout
           clearTimeout(timeout)
@@ -186,16 +186,7 @@ export default {
 </script>
 
 <style>
-  .input-field input[type=text]:focus+label {
-      color: black;
-  }
-  .input-field input[type=text]:focus {
-      border-bottom: 1px solid black;
-      box-shadow: none;
-  }
-  .input-field .prefix.active {
-    color: #2196F3;
-  }
+
 .addDetail{
   padding: 5px;
   margin-top: -5px;

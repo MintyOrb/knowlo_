@@ -184,12 +184,12 @@ export default {
   }
 }
 </script>
-<style src="materialize-css/dist/css/materialize.css"></style>
+<!-- <style src="materialize-css/dist/css/materialize.css"></style> -->
+<style src="assets/materialize-subset.css"></style>
 <style src="flickity/dist/flickity.min.css"></style>
 <style src="leaflet/dist/leaflet.css"></style>
 <style src="firebaseui/dist/firebaseui.css"></style>
 <style>
-/* * {outline: 1px solid black;} */
 .modal .modal-content {
   padding: 0px;
 }
@@ -299,9 +299,6 @@ export default {
   margin-right: 10%;
   margin-top: 15px;
 }
-input:not([type]), input[type=text]:not(.browser-default), input[type=password]:not(.browser-default), input[type=email]:not(.browser-default), input[type=url]:not(.browser-default), input[type=time]:not(.browser-default), input[type=date]:not(.browser-default), input[type=datetime]:not(.browser-default), input[type=datetime-local]:not(.browser-default), input[type=tel]:not(.browser-default), input[type=number]:not(.browser-default), input[type=search]:not(.browser-default), textarea.materialize-textarea {
-  margin-bottom:0;
-}
 
 .login-head {
     text-align: center;
@@ -372,9 +369,6 @@ and (min-device-width : 320px)
 and (max-device-width : 480px) { /* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones */
     .metaNav {
       justify-content: flex-start!important;
-    }
-    .tagNav span {
-      margin-bottom: 18px;
     }
     .definition{
       width:100vw!important;
@@ -474,16 +468,7 @@ and (max-device-width : 480px) { /* portrait tablets, portrait iPad, landscape e
 
 element.style {
 }
-input:not([type]):focus:not([readonly]), input[type=text]:not(.browser-default):focus:not([readonly]), input[type=password]:not(.browser-default):focus:not([readonly]), input[type=email]:not(.browser-default):focus:not([readonly]), input[type=url]:not(.browser-default):focus:not([readonly]), input[type=time]:not(.browser-default):focus:not([readonly]), input[type=date]:not(.browser-default):focus:not([readonly]), input[type=datetime]:not(.browser-default):focus:not([readonly]), input[type=datetime-local]:not(.browser-default):focus:not([readonly]), input[type=tel]:not(.browser-default):focus:not([readonly]), input[type=number]:not(.browser-default):focus:not([readonly]), input[type=search]:not(.browser-default):focus:not([readonly]), textarea.materialize-textarea:focus:not([readonly]) {
-    border-bottom: 1px solid #2196F3!important;
-    box-shadow: 0 1px 0 0 #2196F3!important;
-  }
 
-element.style {
-}
-input:not([type]):focus:not([readonly]) + label, input[type=text]:not(.browser-default):focus:not([readonly]) + label, input[type=password]:not(.browser-default):focus:not([readonly]) + label, input[type=email]:not(.browser-default):focus:not([readonly]) + label, input[type=url]:not(.browser-default):focus:not([readonly]) + label, input[type=time]:not(.browser-default):focus:not([readonly]) + label, input[type=date]:not(.browser-default):focus:not([readonly]) + label, input[type=datetime]:not(.browser-default):focus:not([readonly]) + label, input[type=datetime-local]:not(.browser-default):focus:not([readonly]) + label, input[type=tel]:not(.browser-default):focus:not([readonly]) + label, input[type=number]:not(.browser-default):focus:not([readonly]) + label, input[type=search]:not(.browser-default):focus:not([readonly]) + label, textarea.materialize-textarea:focus:not([readonly]) + label {
-    color:  #2196F3!important;
-  }
 .material-icons {
   font-size: 25px;
 }

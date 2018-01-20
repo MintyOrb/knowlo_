@@ -70,7 +70,7 @@
       </div>
       <div class="stepContainer">
         <isotope ref='contains' :list="contains" :options='{}'>
-          <tag :tag="tag" v-for="tag in contains" :display="tagDisplay" :key="tag.tag.uid" v-on:include="addToQuery(tag)" v-on:exclude="removeContains(tag.tag.uid)" v-on:focus="addToQuery(tag)" v-on:pin="addToQuery(tag)" hide="remove">
+          <tag :tag="tag" v-for="tag in contains" :display="tagDisplay" :key="tag.tag.uid" v-on:include="addToQuery(tag)" v-on:remove="removeContains(tag.tag.uid)" v-on:focus="addToQuery(tag)" v-on:pin="addToQuery(tag)" hide="remove">
           </tag>
           <!-- v-on:exclude="removeSynonym(tag.tag.uid)" -->
         </isotope>

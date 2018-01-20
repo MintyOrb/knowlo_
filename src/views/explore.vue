@@ -46,29 +46,23 @@
       <div class="collapsible-body">
         <form id='tagSuggestionOptions'>
           <span>
-                <input v-model="suggestionDisplay" class="with-gap" name="group1" type="radio" value='size' id="size" />
-                <label for="size">Size</label>
-              </span>
-              <span>
-                <input v-model="suggestionDisplay" class="with-gap" name="group1" type="radio" value='time' id="time" />
-                <label for="time">Time</label>
-              </span>
+            <q-radio v-model="suggestionDisplay" label="Size" class="with-gap" name="group1" type="radio" val='size' id="size" />
+          </span>
           <span>
-                <input v-model="suggestionDisplay" class="with-gap" name="group1" type="radio" value='disciplines' id="disciplines"  />
-                <label for="disciplines">Disciplines</label>
-              </span>
+            <q-radio v-model="suggestionDisplay" label="Time" class="with-gap" name="group1" type="radio" val='time' id="time" />
+          </span>
           <span>
-                <input v-model="suggestionDisplay" class="with-gap" name="group1" type="radio" value='groups' id="groups" />
-                <label for="groups">Groups</label>
-              </span>
+            <q-radio v-model="suggestionDisplay" label="Disciplines" class="with-gap" name="group1" type="radio" val='disciplines' id="disciplines"  />
+          </span>
           <span>
-                <input v-model="suggestionDisplay" class="with-gap" name="group1" type="radio" value='none' id="none" />
-                <label for="none">Top</label>
-              </span>
+            <q-radio v-model="suggestionDisplay" label="Groups" class="with-gap" name="group1" val='groups' id="groups" />
+          </span>
+          <span>
+            <q-radio v-model="suggestionDisplay" label="Top" class="with-gap" name="group1" val='none' id="none" />
+          </span>
           <span v-if="member.first">
-                <input v-model="suggestionDisplay" class="with-gap" name="group1" type="radio" value='member' id="member" />
-                <label for="member">{{member.first}}</label>
-              </span>
+                <q-radio v-model="suggestionDisplay" :label="member.first" class="with-gap" name="group1" val='member' id="member" />
+          </span>
         </form>
         <div>
           <!--  suggested -->
@@ -162,6 +156,7 @@
         </ul>
         </span>
         </span>
+          <span @click.stop.prevent='addTest'>add</span>
       </div>
       <div class="collapsible-body" style="border-bottom:none;">
         <br/>
@@ -272,11 +267,11 @@ import infiniteScroll from 'vue-infinite-scroll'
 import Spinner from 'vue-simple-spinner'
 import isotope from 'vueisotope'
 import Flickity from 'vue-flickity'
-import {QBtn, QIcon, BackToTop, Toast} from 'quasar'
+import {QBtn, QIcon, BackToTop, QRadio, Toast} from 'quasar'
 
 export default {
   name: 'explore',
-  components: { tag, Toast, resource, search, Spinner, isotope, Flickity, QBtn, QIcon, tagSuggestions },
+  components: { tag, Toast, resource, search, Spinner, isotope, Flickity, QBtn, QIcon, QRadio, tagSuggestions },
   directives: {infiniteScroll, BackToTop},
   props: ['tagQuery', 'member'],
   data () {
@@ -326,6 +321,12 @@ export default {
     }
   },
   methods: {
+    addTest () {
+      console.log(this.resources[0])
+      // this.resources.unshift({
+      //
+      // })
+    },
     clearTagQuery () {
       this.tagQuery = []
     },
@@ -592,6 +593,7 @@ export default {
               this.endOfResources = true
               if (!infinite) {
                 Materialize.toast('No resources found...', 2000)
+                this.resources = []
               }
             } else if (infinite) {
               this.resources.push.apply(this.resources, response.body)
