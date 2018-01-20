@@ -1,5 +1,5 @@
 <template>
-  <div class="input-field ">
+  <div :id="'cont' + inputId" class="input-field ">
     <q-input type="text" float-label='Search' v-on:click.stop.prevent=""  class="search" v-model="input"  @focus="hidden=false" @blur="delayBlur"/>
     <ul id="ac" class="dropdown-content" style="position:absolute" :class="{ hide: hidden}">
 			<li v-for="suggestion in suggestions" @click.stop.prevent='pick(suggestion)'>
@@ -86,7 +86,7 @@ export default {
     }
   },
   mounted () {
-    $('input').attr('id', this.inputId) // hacky way to grab text from input. Should probably just impliment quasar searh/autocomplete...
+    $('#cont' + this.inputId + ' input').attr('id', this.inputId) // hacky way to grab text from quasar input. Should probably just impliment quasar searh/autocomplete...
     var options = {
       inputId: this.inputId || 'search-input',
       ajaxUrl: this.ajaxUrl || '/api/tag/search/',

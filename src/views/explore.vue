@@ -156,7 +156,6 @@
         </ul>
         </span>
         </span>
-          <span @click.stop.prevent='addTest'>add</span>
       </div>
       <div class="collapsible-body" style="border-bottom:none;">
         <br/>
@@ -321,12 +320,6 @@ export default {
     }
   },
   methods: {
-    addTest () {
-      console.log(this.resources[0])
-      // this.resources.unshift({
-      //
-      // })
-    },
     clearTagQuery () {
       this.tagQuery = []
     },

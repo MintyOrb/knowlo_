@@ -57,8 +57,8 @@
           <tag v-for="tag in synonyms" :key="tag.tag.uid" :tag="tag" :display="'list'" v-on:include="addToQuery(tag)" v-on:exclude="removeSynonym(tag.tag.uid)" v-on:focus="addToQuery(tag)" v-on:pin="addToQuery(tag)" hide="remove">
           </tag>
         </isotope>
-        <search v-if='addSyn' :exclude="$route.params.uid" input-id="syn" v-on:select="addSynonym"></search>
-        <search v-if='mergeSyn' :exclude="$route.params.uid" input-id="syn" v-on:select="mergeSynonym"></search>
+        <!-- <search v-if='addSyn' :exclude="$route.params.uid" input-id="syn" v-on:select="addSynonym"></search> -->
+        <!-- <search v-if='mergeSyn' :exclude="$route.params.uid" input-id="syn" v-on:select="mergeSynonym"></search> -->
       </div>
       <div class="stepContainer">
         <isotope ref='within' :list="within" :options='{}'>
