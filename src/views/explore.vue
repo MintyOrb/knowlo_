@@ -232,9 +232,14 @@
               No more results! Add a resource or shuffle?
             </p>
             <div>
-              <router-link :to="{ name: 'addResource'}" class="hoverable btn-floating btn-large waves-effect waves-light red"><i class="material-icons">add</i>
+              <router-link :to="{ name: 'addResource'}" >
+                <q-btn color='primary' round >
+                  <q-icon name="add" />
+                </q-btn>
               </router-link>
-              <span @click="random" class='btn-floating hoverable btn-large waves-effect waves-light red'><i class="fa fa-random fa-2x "></i></span>
+              <q-btn @click="random" color='primary' round >
+                <i class="fa fa-random fa-2x "></i>
+              </q-btn>
             </div>
           </div>
 

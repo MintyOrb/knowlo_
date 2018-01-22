@@ -29,11 +29,9 @@
     <flickity ref='flickBody' class="tagSections" :options="flickBody">
 
       <div class="stepContainer">
-
-        <div>
-          <a @click="addResourceType='icon'; addResource = true;" class="hoverable btn-floating btn-large waves-effect waves-light red"><i class="material-icons">add</i></a>
-        </div>
-
+        <q-btn color='primary' round @click="addResourceType='icon'; addResource = true;">
+          <q-icon name="add" />
+        </q-btn>
         <div v-for="icon in icons" :key="icon['resource']['uid']">
           <resource :re="icon" :display="'list'" v-on:vote-cast='evalTopTag'>
           </resource>
@@ -41,10 +39,9 @@
       </div>
 
       <div class="stepContainer definition">
-        <div>
-          <a @click="addResourceType='definition'; addResource = true;" class="hoverable btn-floating btn-large waves-effect waves-light red"><i class="material-icons">add</i></a>
-        </div>
-
+        <q-btn color='primary' round @click="addResourceType='definition'; addResource = true;">
+          <q-icon name="add" />
+        </q-btn>
         <div v-for="def in definitions" :key="def['resource']['uid']">
           <resource :re="def" :display="'list'">
           </resource>
@@ -96,12 +93,12 @@ import search from '@/components/search'
 import resource from '@/components/resource'
 import tag from '@/components/tag'
 import Flickity from 'vue-flickity'
-import { QTabs, QTab } from 'quasar'
+import { QTabs, QTab, QBtn, QIcon } from 'quasar'
 
 export default {
   name: 'tagv',
   props: ['tagQuery', 'member'],
-  components: { isotope, addResource, search, tag, resource, Flickity, QTabs, QTab },
+  components: { isotope, addResource, search, tag, resource, Flickity, QTabs, QTab, QBtn, QIcon },
   data: function () {
     return {
       tag: {

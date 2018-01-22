@@ -11,8 +11,15 @@
 
         <h5 style="line-height:1.3em;" class="header light">Knowlo is a <router-link to="/principals"><span >principled</span></router-link>, <a target="_blank" href="http://github.com/bornytm/knowlo"><span >open source</span></a>, experiment in collaborative knowledge sharing</h5>
       </div>
-      <div style='margin-top: 80px;' class="row center">
-        <router-link to="/" class="btn-large waves-effect waves-light blue margin20"><i class="fa fa-compass fa-2x "></i> explore</router-link> <span style="font-weight:200">  </span> <span @click="random" class='margin20 btn-large waves-effect waves-light blue'><i class="fa fa-random fa-2x "></i> shuffle</span>
+      <div style='margin-top: 80px;' class="center">
+        <router-link to="/">
+          <q-btn class='landb' color="primary" big outline>
+            <i class="fa fa-compass  "></i> Explore
+          </q-btn>
+        </router-link>
+        <q-btn class='landb'  @click="random" color="primary" big outline>
+          <i class="fa fa-random  "></i> Shuffle
+        </q-btn>
       </div>
       <br>
       <br>
@@ -63,14 +70,23 @@
       </p>
     </div>
   </div>
-  <div class="row center">
-    <router-link to="/" class="btn-large waves-effect waves-light blue margin20"><i class="fa fa-compass fa-2x "></i> explore</router-link> <span style="font-weight:200">  </span> <span @click="random" class='margin20 btn-large waves-effect waves-light blue'><i class="fa fa-random fa-2x "></i> shuffle</span>
+  <div style='padding-bottom:100px;' class=" center">
+    <router-link to="/">
+      <q-btn class='landb' color="primary" big outline>
+        <i class="fa fa-compass  "></i> Explore
+      </q-btn>
+    </router-link>
+    <q-btn class='landb'  @click="random" color="primary" big outline>
+      <i class="fa fa-random  "></i> Shuffle
+    </q-btn>
   </div>
 </main>
 </template>
 
 <script>
+import { QBtn } from 'quasar'
 export default {
+  components: { QBtn },
   methods: {
     random () {
       this.$http.get('/api/resource/random').then(response => {
@@ -87,6 +103,13 @@ export default {
 </script>
 
 <style>
+.landb {
+  font-weight: 300;
+  margin: 20px;
+}
+.landb i {
+  margin-right: 10px;
+}
 .deets {
     display: flex;
     align-items: flex-end;

@@ -306,7 +306,7 @@ i.large {
 .page-footer {
   padding-top: 20px;
   color: #fff;
-  background-color: #ee6e73;
+  background-color: #2196F3;
 }
 
 .page-footer .footer-copyright {
@@ -410,11 +410,6 @@ nav ul a span.badge {
   }
 }
 
-.container .row {
-  margin-left: -0.75rem;
-  margin-right: -0.75rem;
-}
-
 .section {
   padding-top: 1rem;
   padding-bottom: 1rem;
@@ -434,7 +429,7 @@ nav ul a span.badge {
 
 nav {
   color: #fff;
-  background-color: #ee6e73;
+  background-color: #2196F3;
   width: 100%;
   height: 56px;
   line-height: 56px;
@@ -833,7 +828,7 @@ nav .input-field label.active i {
 }
 
 .card .card-action a:not(.btn):not(.btn-large):not(.btn-large):not(.btn-floating) {
-  color: #ffab40;
+  color: #039be5;
   margin-right: 24px;
   -webkit-transition: color .3s ease;
   transition: color .3s ease;
@@ -841,7 +836,7 @@ nav .input-field label.active i {
 }
 
 .card .card-action a:not(.btn):not(.btn-large):not(.btn-large):not(.btn-floating):hover {
-  color: #ffd8a6;
+  color: #9cd0fd;
 }
 
 .card .card-reveal {
@@ -1017,7 +1012,6 @@ nav .input-field label.active i {
 .btn, .btn-large {
   text-decoration: none;
   color: #fff;
-  background-color: #26a69a;
   text-align: center;
   letter-spacing: .5px;
   -webkit-transition: .2s ease-out;
@@ -1025,9 +1019,6 @@ nav .input-field label.active i {
   cursor: pointer;
 }
 
-.btn:hover, .btn-large:hover {
-  background-color: #2bbbad;
-}
 
 .btn-flat {
   -webkit-box-shadow: none;

@@ -92,8 +92,8 @@
 			</span>
  		</div>
 
-    <div v-if='editing'>
-      save | candel...
+    <div v-if='editing' class="card-action">
+      <a>save</a> <a @click="editing = false">cancel</a>
     </div>
 
 		<div v-if='display === "godMode"'>

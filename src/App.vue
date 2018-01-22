@@ -3,7 +3,7 @@
 
   <!-- TODO: make component - top nav -->
   <div id="nav-slide" class="navbar-fixed">
-    <nav class='blue'>
+    <nav class=''>
       <div class="nav-wrapper">
         <router-link to="/" class="brand-logo center thin">knowlo</router-link>
         <ul class="left ">
@@ -44,7 +44,7 @@
     <router-view v-on:clear="tagQuery = []" :tag-query="tagQuery" :member="member" style="padding-top:50px" />
   </transition>
 
-  <footer class="page-footer blue">
+  <footer class="page-footer ">
     <div class="container">
       <div class="row">
       </div>
@@ -349,6 +349,9 @@ html {
     transform: translateY(-100%);
 }
 
+.nav-wrapper a:hover {
+  color:white;
+}
 #nav-slide{
   position: fixed;
   width: 100vw;
@@ -493,7 +496,5 @@ element.style {
       -ms-transform: translate(-50%,-50%);
           transform: translate(-50%,-50%);
 }
-.row {
-  margin: auto!important;
-}
+
 </style>

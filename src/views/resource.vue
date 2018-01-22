@@ -115,9 +115,9 @@
           <div style='margin-bottom:40px;'>
             Nothing yet! Be the first to add your thoughts...
           </div>
-          <div>
-            <a @click="addResourceType='discussion'; addResource = true;" class="hoverable btn-floating btn-large waves-effect waves-light red"><i class="material-icons">add</i></a>
-          </div>
+          <q-btn color='primary' round @click="addResourceType='discussion'; addResource = true;">
+            <q-icon name="add" />
+          </q-btn>
         </div>
         <isotope v-else ref="discussionBin" :list="discussion" :options='discussionIsotope()' id="container">
           <resource :key="re.resource.uid" v-for="re in discussion" :re="re" :class="{'fullWidth': discussionDisplay=='list'}" :display="discussionDisplay">
@@ -188,13 +188,13 @@ import search from '@/components/search'
 import isotope from 'vueisotope'
 import Flickity from 'vue-flickity'
 import L from 'leaflet'
-import {BackToTop, scroll, AppFullscreen, QTabs, QTab} from 'quasar'
+import {BackToTop, scroll, AppFullscreen, QTabs, QTab, QBtn, QIcon} from 'quasar'
 const { setScrollPosition } = scroll
 
 export default {
   props: ['member'],
   name: 'resourcev',
-  components: { isotope, search, tag, resource, Flickity, addResource, QTabs, QTab },
+  components: { isotope, search, tag, resource, Flickity, addResource, QTabs, QTab, QBtn, QIcon },
   directives: {BackToTop},
   data: function () {
     return {

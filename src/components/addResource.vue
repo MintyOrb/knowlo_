@@ -1,14 +1,11 @@
 <template :tag-query='tagQuery' :member='member'>
   <div id='addResourceModal' class='modal modal-fixed-footer'>
     <div class="addMeta modal-content">
-      <flickity v-if="loaded" :options='flickNav' class="addNav">
+      <span v-if="loaded" :options='flickNav' class="addNav center">
         <div>
           <span>{{type}}</span>
         </div>
-        <div v-if="type==='discussion' || type==='resource' " class="navItems">
-          <span>Tag</span>
-        </div>
-      </flickity>
+      </span>
 
 
       <!-- isotope contianers -->
@@ -18,57 +15,50 @@
 
             <div class="row" v-if="type==='resource'">
               <div class="input-field col s12">
-                <input v-model="resource.core.url" id="url" type="url" class="validate">
-                <label for="url">URL</label>
+                <q-input float-label='URL' type='url' v-model="resource.core.url"/>
               </div>
             </div>
 
             <div class="row" v-if="type==='icon'">
               <div class="input-field col s12">
-                <input v-model="resource.core.mThumb" id="url" type="url" class="validate">
-                <label for="url">URL</label>
+                <q-input float-label='URL' type='url' v-model="resource.core.mThumb"/>
               </div>
             </div>
 
       <div v-if="type==='resource'" class="row">
       <div class="input-field col s12">
-      <input v-model="resource.detail.title" id="title" type="text" class="validate">
-      <label for="title">Title</label>
+      <q-input float-label='Title' v-model="resource.detail.title"/>
       </div>
       </div>
 
       <div v-if="type==='resource'" class="row">
       <div class="input-field col s12">
-      <input v-model="resource.detail.subtitle" id="subtitle" type="text" class="validate">
-      <label for="subtitle">Subtitle</label>
+      <q-input float-label='Subtitle' v-model="resource.detail.subtitle"/>
       </div>
       </div>
 
       <div v-if="type==='discussion' || type==='definition'|| type==='resource'" class="row">
       <div class="input-field col s12">
-      <textarea v-model="resource.detail.text" id="text" class="materialize-textarea"></textarea>
-      <label for="value">Text</label>
+      <q-input type='textarea' v-model="resource.detail.text" float-label='Body Text' />
       </div>
       </div>
 
       <div v-if="type==='resource'" class="row">
       <div class="input-field col s12">
-      <textarea v-model="resource.detail.source" id="source" class="materialize-textarea"></textarea>
-      <label for="source">Source</label>
+      <q-input type='textarea' v-model="resource.detail.source" float-label='Source' />
       </div>
       </div>
 
       <div v-if="type==='resource'" class="row">
       <div class="input-field col s12">
-      <textarea v-model="resource.detail.description" id="description" class="materialize-textarea"></textarea>
-      <label for="description">Description</label>
+      <q-input type='textarea' v-model="resource.detail.description" float-label='Description' />
       </div>
       </div>
 
       </form>
-      <div class='btn blue' @click.once="upsertResource()">
-      add {{type}}
-      </div>
+      <q-btn color='primary' @click.once="upsertResource()">
+        add {{type}}
+      </q-btn>
 
       </div>
 
@@ -133,10 +123,11 @@ import Flickity from 'vue-flickity'
 import isotope from 'vueisotope'
 import search from '@/components/search'
 import tag from '@/components/tag'
+import { QInput, QBtn } from 'quasar'
 
 export default {
   name: 'addResource',
-  components: { Flickity, search, isotope, tag },
+  components: { Flickity, search, isotope, tag, QInput, QBtn },
   props: {
     member: Object,
     type: {
@@ -149,12 +140,6 @@ export default {
       loaded: false, // need to wait for model to open before initting flickity
       synSetMeta: false, // tag resource to set
       resouceMeta: false, // tag resource to resource
-      flickRegistry: [],
-      flickNav: {
-        pageDots: true,
-        prevNextButtons: false,
-        accessibility: false // to prevent jumping when focused
-      },
       flickBody: {
         wrapAround: true,
         pageDots: false,
@@ -385,7 +370,6 @@ export default {
   width: 100%;
   padding: 10px;
   z-index: 1002;
-  background: #fafafa;
   font-size: 30px;
 }
 .addContainer {
