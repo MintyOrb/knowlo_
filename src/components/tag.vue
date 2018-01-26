@@ -520,7 +520,8 @@ export default {
   font-size: 20px;
 }
 .letter {
-  font-size: 25px;
+  font-size: 32px;
+  height: 40px;
 }
 /* Smartphones (portrait and landscape) ----------- */
 @media only screen

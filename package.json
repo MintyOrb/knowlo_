@@ -32,7 +32,7 @@
     "materialize-css": "^0.100.2",
     "nouislider": "^10.1.0",
     "quasar-extras": "0.x",
-    "quasar-framework": "^0.14.4",
+    "quasar-framework": "^0.14.7",
     "seraph": "^0.15.2",
     "serve-static": "^1.13.1",
     "shortid": "^2.2.8",

@@ -55,9 +55,10 @@
     <!-- <div class="metaNav"> -->
     <div class="metaNav" >
       <!-- <i @click="toggleFullScreen()" class="material-icons left">fullscreen</i> -->
-      <q-tabs>
-        <q-tab @click="selectSection(i)" v-for="step, i in resourceSection" :key="i" slot="title" :label="step" />
+      <q-tabs >
+        <q-tab @click="selectSection(i)" v-for="step, i in resourceSection" :key="i" slot="title" :label="step" :name="step"/>
       </q-tabs>
+      <!-- <q-btn @click='' color='secondary'>delete</q-btn>{{selectedTab}} -->
     </div>
     <!-- </div> -->
     <flickity ref='flickBody' :options="flickBody" class="resourceSections">
@@ -123,7 +124,9 @@
           <resource :key="re.resource.uid" v-for="re in discussion" :re="re" :class="{'fullWidth': discussionDisplay=='list'}" :display="discussionDisplay">
           </resource>
         </isotope>
-
+        <q-btn color='primary' round @click="addResourceType='discussion'; addResource = true;" >
+          <q-icon name="add" />
+        </q-btn>
       </div>
       <!-- Description -->
       <div class="resourceStep cont-medium">
@@ -171,9 +174,6 @@
         </isotope>
       </div>
     </flickity>
-    <div class="addBtn">
-      <a @click="addResourceType='discussion'; addResource = true;" class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">add</i></a>
-    </div>
   </div>
 </div>
 </template>
@@ -216,6 +216,7 @@ export default {
       relatedDisplay: 'card', // display type for related resources
       discussionDisplay: 'card', // default display for discussion
       resourceSection: ['Discussion', 'Detail', 'Tags', 'Related'],
+      selectedTab: 'Relatedd',
       addResource: false,
       addResourceType: '',
       modalOpen: false,
@@ -230,6 +231,12 @@ export default {
     }
   },
   methods: {
+    cancelAdding () { // belongs in resource container...
+      this.discussion.shift()
+    },
+    test () { // belongs in resource container...
+      this.discussion.push({editing: true, resource: {uid: 'hi'}})
+    },
     toggleFullScreen () {
       AppFullscreen.toggle()
     },
@@ -614,6 +621,7 @@ and (max-width : 767px) {
   font-weight: 200;
   color: white;
   padding: 30px;
+  white-space: pre-line;
 }
 
 #image-map {

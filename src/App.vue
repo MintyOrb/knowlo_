@@ -190,6 +190,9 @@ export default {
 <style src="leaflet/dist/leaflet.css"></style>
 <style src="firebaseui/dist/firebaseui.css"></style>
 <style>
+#app {
+  background-color: #f7f7f7;
+}
 .modal .modal-content {
   padding: 0px;
 }
@@ -243,7 +246,7 @@ export default {
 /* in member and nav */
 .resourceSections{
   height: 100%!important;
-  background-color: white;
+  background-color: #f7f7f7;
 }
 .resourceStep {
   width: 25vw;
@@ -479,6 +482,7 @@ element.style {
   box-shadow: none;
 }
 .thumb {
+    background-color: white;
     min-width: 40px;
     width: 40px;
     height: 40px;

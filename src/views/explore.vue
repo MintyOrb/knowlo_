@@ -574,64 +574,40 @@ export default {
             exclude.push(this.tagQuery[tagIndex]['setID'])
           }
         }
+        let route = ''
         if (this.member.uid !== null) { // member specific query if logged in
-          this.$http.get('/api/auth/resource', {
-            params: {
-              languageCode: 'en',
-              include: include,
-              exclude: exclude,
-              showViewed: this.showViewed,
-              skip: skip,
-              limit: limit,
-              orderby: this.orderby,
-              descending: this.descending
-            }
-          }).then(response => {
-            if (response.body.length === 0) {
-              this.endOfResources = true
-              if (!infinite) {
-                Materialize.toast('No resources found...', 2000)
-                this.resources = []
-              }
-            } else if (infinite) {
-              this.resources.push.apply(this.resources, response.body)
-            } else {
-              this.resources = response.body
-            }
-            this.loadingResources = false
-          }, failed => {
-            Materialize.toast('Something went wrong...', 2000)
-            this.loadingResources = false
-          })
-        } else { // general query if not logged inconsole.log('getting general')
-          this.$http.get('/api/resource', {
-            params: {
-              languageCode: 'en',
-              include: include,
-              exclude: exclude,
-              skip: skip,
-              limit: limit,
-              orderby: this.orderby,
-              descending: this.descending
-            }
-          }).then(response => {
-            if (response.body.length === 0) {
-              this.endOfResources = true
-              if (!infinite) {
-                Materialize.toast('No resources found...', 2000)
-              }
-            } else if (infinite) {
-              this.resources.push.apply(this.resources, response.body)
-            } else {
-              this.resources = response.body
-            }
-            this.loadingResources = false
-          }, failed => {
-            console.log(failed)
-            Materialize.toast('Something went wrong...', 2000)
-            this.loadingResources = false
-          })
+          route = '/api/auth/resource'
+        } else {
+          route = '/api/resource'
         }
+        this.$http.get(route, {
+          params: {
+            languageCode: 'en',
+            include: include,
+            exclude: exclude,
+            showViewed: this.showViewed,
+            skip: skip,
+            limit: limit,
+            orderby: this.orderby,
+            descending: this.descending
+          }
+        }).then(response => {
+          if (response.body.length === 0) {
+            this.endOfResources = true
+            if (!infinite) {
+              Materialize.toast('No resources found...', 2000)
+              this.resources = []
+            }
+          } else if (infinite) {
+            this.resources.push.apply(this.resources, response.body)
+          } else {
+            this.resources = response.body
+          }
+          this.loadingResources = false
+        }, failed => {
+          Materialize.toast('Something went wrong...', 2000)
+          this.loadingResources = false
+        })
       }
     },
     fetchResourceQuantity () {

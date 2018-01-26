@@ -57,7 +57,7 @@
         <q-input v-if="editing" v-model="re.resource.subtitle" float-label="Subtitle" />
 			</div>
 		</div>
-		<div class="rText" v-if="!editing && (re.resource.text && display !='thumb')"
+		<div class="rText"  v-if="!editing && (re.resource.text && display !='thumb') && (!re.resource.title || display ==='card')"
     :class="{
     'titleText truncate': display === 'list' && $route.name != 'tag'}"
     >
@@ -68,10 +68,8 @@
     <q-input v-if='editing' v-model="re.resource.text" float-label="Body Text" type='textarea'/>
 
 
-    <q-collapsible v-if="display !== 'thumb' && !editing"
-      @open="sizeChange"
-      @close="sizeChange"
-      :sublabel="voteLabel()"
+    <div v-if="display !== 'thumb' && !editing"
+      class='vote'
       @click.stop.prevent=""
       :class="{
       'voteHalf': display === 'list'}"
@@ -79,10 +77,11 @@
       <div class="">
 				<i  @click="ratingDisplay='global'" @mouseenter="ratingDisplay='global'" class="fa fa-lg fa-globe rating" :class="{'selected': ratingDisplay==='global'}"></i>
 				<i  @click="ratingDisplay='member'" @mouseenter="ratingDisplay='member'" class="fa fa-lg fa-user rating" :class="{'selected': ratingDisplay==='member'}"></i>
+        <span class='right'><span class='text-orange'> Q<span v-if='display === "list"'>uality</span>: </span> {{displayQuality.toString().substring(0, 4)}} <span class='text-blue'>C<span v-if='display === "list"'>omplexity</span>: </span> {{displayComplexity.toString().substring(0, 4)}}</span>
 			</div>
       <q-slider @change="qualityChange" color="orange"  v-model="displayQuality" :min="0" :max="1" :step="0.001" label :label-value="displayQuality | strr"/>
       <q-slider @change="complexityChange" color="blue" v-model="displayComplexity" :min="0" :max="1" :step="0.001" label :label-value="displayComplexity | strr"/>
-    </q-collapsible>
+    </div>
 
 		<div v-if="display === 'card' && !editing" class='card-action'>
  			<span class='left card-bottom'><i class="tiny material-icons">visibility</i>{{trimNumber(re.resource.viewCount,1) || 0}}</span>
@@ -93,7 +92,7 @@
  		</div>
 
     <div v-if='editing' class="card-action">
-      <a>save</a> <a @click="editing = false">cancel</a>
+      <a @click="editing = false">save</a> <a @click="$emit('cancel')">cancel</a>
     </div>
 
 		<div v-if='display === "godMode"'>
@@ -111,6 +110,7 @@
 import Materialize from 'materialize-css'
 import $ from 'jquery'
 import { QSlider, QCollapsible, QChip, QInput } from 'quasar'
+// import addResource from '@/components/addResource'
 
 export default {
   name: 'resource',
@@ -122,6 +122,7 @@ export default {
   data: () => {
     return {
       editing: false,
+      test: '',
       hovering: false,
       displayQuality: 0,
       displayComplexity: 0,
@@ -139,7 +140,6 @@ export default {
       return '<span><span class="left" style="color:orange">Q: ' + this.displayQuality.toString().substring(0, 4) + '</span> <span style="float:right; color:blue" class="">C: ' + this.displayComplexity.toString().substring(0, 4) + '</span></span>'
     },
     qualityChange (val) {
-      console.log('qual chng ', val)
       if (!this.re.memberVote) {
         this.re.memberVote = {}
       }
@@ -156,7 +156,6 @@ export default {
         this.re.memberVote.complexity = val
         this.vote()
       }
-      console.log('complexity chng ', val)
     },
     selected () {
       this.$emit('selected')
@@ -209,6 +208,9 @@ export default {
   },
   mounted () {
     this.ratingDisplay = 'global'
+    if (this.re.editing) { // adding / editing resource
+      this.editing = true
+    }
   },
   watch: {
     ratingDisplay (val) {
@@ -235,6 +237,16 @@ export default {
 </script>
 
 <style>
+.vote {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+.list .thumb {
+  margin:5px;
+  border-radius: 0;
+  height: 50px;
+  width: 50px;
+}
 .voteView {
   display: flex;
   flex-direction: column;
@@ -245,6 +257,7 @@ export default {
   font-size: 15px;
 }
 .list {
+    background-color: white;
     padding: .5% 1% 1% 2%;
     width: 94%;
     margin-left: 3%;
@@ -255,6 +268,9 @@ export default {
     flex-flow: row wrap;
     align-items: center;
     max-width: 100vw;
+}
+.list:hover {
+  z-index: 1020;
 }
 .card {
 		box-shadow: none!important;
@@ -296,9 +312,11 @@ export default {
   font-size:14px;
 }
 .rText{
-  font-size: 20px;
+  font-size: 15px;
   font-weight: 300;
   padding:20px;
+  white-space: pre-line;
+  padding-top: 0;
 }
 .rating{
   opacity: .4;

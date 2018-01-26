@@ -1,7 +1,7 @@
 <template :tag-query='tagQuery' :member='member'>
   <div id='addResourceModal' class='modal modal-fixed-footer'>
     <div class="addMeta modal-content">
-      <span v-if="loaded" :options='flickNav' class="addNav center">
+      <span v-if="loaded" class="addNav center">
         <div>
           <span>{{type}}</span>
         </div>
