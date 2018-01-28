@@ -10,7 +10,7 @@
   <ul class='exploreBins' data-collapsible="accordion">
 
     <li data-pane="search" id='search'>
-      <div class="collapsible-header searchHead">
+      <div class="collapsible-header searchHead shadowUnder">
 
         <search exclude="" input-id="mainSearch" holder-text="Search" v-on:select="addToQuery"></search>
 
@@ -42,7 +42,7 @@
       </div>
     </li>
     <li data-pane="tags">
-      <div class="collapsible-header"><i class="fa fa-filter"></i>Tag Directory</div>
+      <div class="collapsible-header shadowUnder"><i class="fa fa-filter"></i>Tag Directory</div>
       <div class="collapsible-body">
         <form id='tagSuggestionOptions'>
           <span>
@@ -248,7 +248,7 @@
             round
             color="primary"
             class="fixed-bottom-right animate-pop"
-            style="margin: 0 15px 15px 0"
+            style="margin: 0 15px 15px 0; z-index:23;"
           >
             <q-icon name="keyboard_arrow_up" />
           </q-btn>
@@ -325,9 +325,6 @@ export default {
     }
   },
   methods: {
-    clearTagQuery () {
-      this.tagQuery = []
-    },
     flicker () { // this looks very stupid. For forcing flickity component in tag directory to reinitalize
       this.show = false
       this.$nextTick(() => {
@@ -620,82 +617,105 @@ export default {
           exclude.push(this.tagQuery[tagIndex]['setID'])
         }
       }
+      let route = ''
       if (this.member.uid !== null) { // member specific query if logged in
-        this.$http.get('/api/auth/resource/count', {
-          params: {
-            languageCode: 'en',
-            include: include
-          }
-        }).then(response => {
-          this.resourcesRelated = response.body.relatedResources
-          this.resourcesViewed = response.body.viewedResources
-        })
+        route = '/api/auth/resource/count'
       } else { // general query if not logged in
-        this.$http.get('/api/resource/count', {
-          params: {
-            languageCode: 'en',
-            include: include,
-            exclude: exclude
-          }
-        }).then(response => {
-          this.resourcesRelated = response.body.relatedResources
-        })
+        route = '/api/resource/count'
       }
+      this.$http.get(route, {
+        params: {
+          languageCode: 'en',
+          include: include,
+          exclude: exclude
+        }
+      }).then(response => {
+        if (response.body.viewedResources) {
+          this.resourcesViewed = response.body.viewedResources
+        }
+        this.resourcesRelated = response.body.relatedResources
+      })
+    },
+    getCookies () {
+      // alpha warning
+      if (!Cookies.get('alpha-warning-seen')) {
+        Cookies.set('alpha-warning-seen', true, {
+          expires: 7
+        })
+        Materialize.toast('Hi! Knowlo is in alpha right now...everthing is subject to change and break.', 10000)
+        this.$router.push('/about')
+      } else {
+        Cookies.set('alpha-warning-seen', true, {
+          expires: 7
+        }) // reset expiry
+      }
+
+      // get previously selected resource display Style
+      if (!Cookies.get('resourceDisplay')) {
+        this.resourceDisplay = 'card'
+      } else {
+        this.resourceDisplay = Cookies.get('resourceDisplay')
+      }
+
+      // get previously selected orderby
+      if (!Cookies.get('orderby')) {
+        this.orderby = 'quality'
+      } else {
+        this.orderby = Cookies.get('orderby')
+      }
+
+      // get previously selected desc/asc setting
+      if (!Cookies.get('descending')) {
+        this.descending = true
+      } else {
+        this.descending = (Cookies.get('descending') === 'true')
+      }
+
+      // get previously show viewed setting
+      if (!Cookies.get('showViewed')) {
+        this.showViewed = false
+      } else {
+        this.showViewed = (Cookies.get('showViewed') === 'true')
+      }
+
+      // get previously selected suggestionDisplay
+      if (!Cookies.get('suggestionDisplay')) {
+        this.suggestionDisplay = 'size'
+      } else {
+        this.suggestionDisplay = Cookies.get('suggestionDisplay')
+      }
+    },
+    updateURL (tagQuery) { // takes list of tag objects
+      if (this.$route.name === 'explore') {
+        let q = tagQuery.map(x => x.translation.name.replace(/\s+/g, '_')).map(x => '+' + x)
+        // TODO: prepend with + for include, - for exclude, * for pin
+        this.$router.push({ name: 'explore', params: { tagquery: q.toString() }, query: this.$route.query })
+      }
+    },
+    checkQuery () {
+      let q = this.tagQuery.map(x => x.translation.name.replace(/\s+/g, '_')).map(x => '+' + x).toString()
+      if ((this.$route.params.tagquery && this.$route.params.tagquery.length > 0) && this.$route.params.tagquery !== q) {
+        this.getTagsByName()
+      }
+    },
+    getTagsByName () {
+      this.$http.get('/api/tag/byname', {
+        params: {
+          // languageCode: 'en', // necessary ?
+          tagString: this.$route.params.tagquery
+        }
+      }).then(response => {
+        this.$emit('updateTagQuery', response.body)
+      })
     }
   },
   mounted () {
-    // alpha warning
-    if (!Cookies.get('alpha-warning-seen')) {
-      Cookies.set('alpha-warning-seen', true, {
-        expires: 7
-      })
-      Materialize.toast('Hi! Knowlo is in alpha right now...everthing is subject to change and break.', 10000)
-      this.$router.push('/about')
-    } else {
-      Cookies.set('alpha-warning-seen', true, {
-        expires: 7
-      }) // reset expiry
-    }
-
     if (!this.resourcesRelated) {
       this.fetchResourceQuantity()
     }
 
-    // get previously selected resource display Style
-    if (!Cookies.get('resourceDisplay')) {
-      this.resourceDisplay = 'card'
-    } else {
-      this.resourceDisplay = Cookies.get('resourceDisplay')
-    }
-
-    // get previously selected orderby
-    if (!Cookies.get('orderby')) {
-      this.orderby = 'quality'
-    } else {
-      this.orderby = Cookies.get('orderby')
-    }
-
-    // get previously selected desc/asc setting
-    if (!Cookies.get('descending')) {
-      this.descending = true
-    } else {
-      this.descending = (Cookies.get('descending') === 'true')
-    }
-
-    // get previously show viewed setting
-    if (!Cookies.get('showViewed')) {
-      this.showViewed = false
-    } else {
-      this.showViewed = (Cookies.get('showViewed') === 'true')
-    }
-
-    // get previously selected suggestionDisplay
-    if (!Cookies.get('suggestionDisplay')) {
-      this.suggestionDisplay = 'size'
-    } else {
-      this.suggestionDisplay = Cookies.get('suggestionDisplay')
-    }
-
+    this.getCookies()
+    this.checkQuery()
     // init paned sections
     $('.exploreBins').collapsible({
       onOpen: (el) => {
@@ -736,6 +756,9 @@ export default {
     }, 500)
   },
   watch: {
+    $route (newv, oldv) {
+      this.checkQuery()
+    },
     member (newVal, oldVal) { // re-fetch resources/tags on member login/logout
       this.loginCheck = true
       this.$nextTick(x => {
@@ -746,6 +769,7 @@ export default {
       })
     },
     tagQuery (val, x) {
+      this.updateURL(val)
       if (this.tagQuery.length === 0) {
         this.suggestionDisplay = 'disciplines'
       }
@@ -776,7 +800,7 @@ export default {
       } else if (newVal !== oldVal && newVal === 'tags') { // if tags
         this.getTags()
       } else { // if tag query
-        console.log(this.$refs.tagQuery)
+        // console.log(this.$refs.tagQuery)
         // this.$refs.tagQuery.reloadItems() // TODO: vue-iso is not using the latest version of isotope, which has this function
       }
       this.layout()

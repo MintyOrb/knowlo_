@@ -9,7 +9,7 @@
   <q-btn class='back' color='primary' small flat round v-show='displayed === "subGroup"' @click="showAllGroups">
     <q-icon name='arrow back' />
   </q-btn>
-  <isotope class='rtags' ref='rtags' :list="tags" :options="{}">
+  <isotope  v-if='show' class='rtags' ref='rtags' :list="tags" :options="{}">
     <tag v-if='displayed === "groups"' v-for="tag, i in tags"
       :tag="tag"
       :key="tag.tag.uid+i"
@@ -46,6 +46,7 @@ export default {
   props: ['tagQuery'],
   data () {
     return {
+      show: true,
       tags: [],
       type: 'none',
       displayed: 'tags', // TODO save in cookie
@@ -54,6 +55,14 @@ export default {
     }
   },
   methods: {
+    flicker () { // this looks very stupid. For forcing flickity component in tag directory to reinitalize
+      this.show = false
+      this.$nextTick(() => {
+        setTimeout(() => {
+          this.show = true
+        }, 50)
+      })
+    },
     showGroup (index) {
       this.tags = this.groupSet[index].contains
       this.displayed = 'subGroup'
@@ -143,6 +152,11 @@ export default {
         this.$refs.rtags.layout()
       })
     }
+  },
+  mounted () {
+    setTimeout(() => { // wait for vue-isotope to be ready
+      this.fetch()
+    }, 300)
   },
   watch: {
     tagQuery (val) {

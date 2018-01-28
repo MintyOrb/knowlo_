@@ -4,6 +4,7 @@ var shortid = require('shortid');
 
 app.get('/api/tag/search/:text/:exclude?', search); // autocomplete
 app.get('/api/tag/most', most);
+app.get('/api/tag/byname', byname); // parse string and return tag object(s)
 
 // translation
 app.get('/api/set/:setID/translation/', readTranslation);          // retrieve a translation of a set based on tag id and provided langauge code. If language not found, attempt a translation. Also returns tag core
@@ -631,7 +632,24 @@ function most(req,res){
     })
   }
 
-
+function byname(req, res) {
+  let names = req.query.tagString.toLowerCase().split(',').map(tag => tag.trim().substr(1).replace(/_+/g, ' '))
+  let cypher = `
+     MATCH (trans:translation) where LOWER(trans.name) IN {names}
+     WITH DISTINCT trans
+     MATCH (trans)<-[lang:HAS_TRANSLATION]-(core:tag)-[r:IN_SET]->(set:synSet)
+     WHERE lang.languageCode IN [ {code} , 'en' ]
+     RETURN DISTINCT set.uid AS setID, core.url AS url, set AS tag, trans AS translation
+  `
+  db.query(cypher, {names: names, code: 'en'},function(err, results) {
+    if (err) console.log(err);
+      for (let index in results) {
+        results[index].status = {includeIcon: true}
+      }
+      // TOOD: add pin/exclude based on status 
+      res.send(results)
+    })
+}
 /*
 
 88888b.  888d888 .d88b.  88888b.  .d8888b

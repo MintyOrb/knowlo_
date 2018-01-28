@@ -82,7 +82,7 @@
   							<i class="fa fa-caret-down"></i>
   						</span> -->
 
-  						<span v-if="!tag.tag.iconURL" class="flexCenter border tagHW">{{tag.translation.name[0]}}</span>
+  						<span v-if="!tag.tag.iconURL" style="padding-top:4px" class="flexCenter border tagHW">{{tag.translation.name[0]}}</span>
   						<span v-else class=" listimg">
   							<img class='circle tagHW' :src="tag.tag.iconURL">
   						</span>
@@ -485,8 +485,8 @@ export default {
   height: 1.3em;
   width: 1.3em;
   position: absolute;
-  top: 64px;
-  right: 18px;
+  top: 56px;
+  right: 25px;
   z-index: 20;
   font-size: 12px;
   background-color: white;

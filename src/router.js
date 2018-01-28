@@ -37,7 +37,7 @@ export default new VueRouter({
   routes: [
     // { path: '/', component: load('components/Hello') },
     {
-      path: '/',
+      path: '/:tagquery?',
       component: explore,
       name: 'explore',
       children: [
@@ -69,6 +69,6 @@ export default new VueRouter({
     },
 
     // Always leave this last one
-    { path: '*', component: load('/components/Error404') } // Not found
+    { path: '*', component: load('components/Error404') } // Not found
   ]
 })

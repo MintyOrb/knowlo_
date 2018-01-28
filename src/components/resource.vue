@@ -31,7 +31,7 @@
       'inline mb': display==='list'}"
 			>
 			<router-link @click='selected' :to="{ name: 'resource', params: { uid: re.resource.uid }}">
-				<img :src="re.resource.mThumb" />
+				<img @click='selected' :src="re.resource.mThumb" />
 			</router-link>
       <q-input v-if="editing" v-model="re.resource.mThumb" float-label="Thumbnail URL" type='url'/>
       <q-input v-if="editing" v-model="re.resource.url" float-label="URL" type='url' />
@@ -270,7 +270,7 @@ export default {
     max-width: 100vw;
 }
 .list:hover {
-  z-index: 1020;
+  z-index: 20;
 }
 .card {
 		box-shadow: none!important;

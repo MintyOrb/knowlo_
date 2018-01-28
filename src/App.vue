@@ -41,7 +41,12 @@
 
   <!-- main view -->
   <transition name="fade" mode="out-in" appear id='q-app'>
-    <router-view v-on:clear="tagQuery = []" :tag-query="tagQuery" :member="member" style="padding-top:50px" />
+    <router-view
+    v-on:clear="tagQuery = []"
+    v-on:updateTagQuery="updateTagQuery"
+    :tag-query="tagQuery"
+    :member="member"
+    style="padding-top:50px" />
   </transition>
 
   <footer class="page-footer ">
@@ -79,6 +84,9 @@ export default {
     }
   },
   methods: {
+    updateTagQuery (tags) {
+      this.tagQuery = tags
+    },
     close () {
       $('.tagQuery-collapse').sideNav('hide')
     },
