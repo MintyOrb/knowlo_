@@ -587,6 +587,12 @@ export default {
             limit: limit,
             orderby: this.orderby,
             descending: this.descending
+          },
+          before (request) { // abort current request, if there is one
+            if (this.previousRequest) {
+              this.previousRequest.abort()
+            }
+            this.previousRequest = request
           }
         }).then(response => {
           if (response.body.length === 0) {

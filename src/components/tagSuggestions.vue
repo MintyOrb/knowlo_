@@ -47,6 +47,7 @@ export default {
   data () {
     return {
       show: true,
+      fetching: false, // currently fetching
       tags: [],
       type: 'none',
       displayed: 'tags', // TODO save in cookie
@@ -55,14 +56,6 @@ export default {
     }
   },
   methods: {
-    flicker () { // this looks very stupid. For forcing flickity component in tag directory to reinitalize
-      this.show = false
-      this.$nextTick(() => {
-        setTimeout(() => {
-          this.show = true
-        }, 50)
-      })
-    },
     showGroup (index) {
       this.tags = this.groupSet[index].contains
       this.displayed = 'subGroup'
@@ -81,33 +74,44 @@ export default {
       this.$emit('add', tag) // with pin/include/focus flag
     },
     fetch () { // determine which method to get
-      this.tags = []
-      if (this.displayed === 'subGroup') {
-        this.displayed = 'groups'
-      }
-      if (this.displayed === 'base') {
-        this.getBase()
-      } else if (this.displayed === 'groups') {
-        this.getGroups()
-      } else if (this.tagQuery.length > 0) {
-        this.getTopRelated()
-      } else {
-        this.getTopAll()
+      if (!this.fetching) { // TODO: fix me. This prevents isotope from screwing up (breaking due to multiple assignments of the tag suggestion array) but also prevents the right tag suggestions from loading after loading the tag query from cookies
+        this.tags = []
+        if (this.displayed === 'subGroup') {
+          this.displayed = 'groups'
+        }
+        if (this.displayed === 'base') {
+          this.getBase()
+        } else if (this.displayed === 'groups') {
+          this.getGroups()
+        } else if (this.tagQuery.length > 0) {
+          this.getTopRelated()
+        } else {
+          this.getTopAll()
+        }
       }
     },
     getBase () {
+      this.fetching = true
       this.tagSuggestions = []
       this.$http.get('/api/set/' + 'rJgyQNK64f' + '/crossSection', { // hard coding base-set uid
         params: {
           languageCode: 'en'
+        },
+        before (request) {
+          if (this.previousRequest) {
+            this.previousRequest.abort()
+          }
+          this.previousRequest = request
         }
       }).then(response => {
         this.tags = response.body.map(x => x.group[0])
 
         this.$refs.rtags.layout()
+        this.fetching = false
       })
     },
     getGroups () {
+      this.fetching = true
       var include = []
       for (var tagIndex = 0; tagIndex < this.tagQuery.length; tagIndex++) {
         include.push(this.tagQuery[tagIndex].setID)
@@ -118,13 +122,21 @@ export default {
           include: include,
           exclude: [''],
           type: this.displayed
+        },
+        before (request) {
+          if (this.previousRequest) {
+            this.previousRequest.abort()
+          }
+          this.previousRequest = request
         }
       }).then(response => {
         this.groupSet = response.body
         this.showAllGroups()
+        this.fetching = false
       })
     },
     getTopRelated () {
+      this.fetching = true
       let include = []
       // var exclude = []
       for (var tagIndex = 0; tagIndex < this.tagQuery.length; tagIndex++) {
@@ -140,9 +152,11 @@ export default {
       }).then(response => {
         this.tags = response.body
         this.$refs.rtags.layout()
+        this.fetching = false
       })
     },
     getTopAll () {
+      this.fetching = true
       this.$http.get('/api/tag/most', {
         params: {
           languageCode: 'en'
@@ -150,13 +164,14 @@ export default {
       }).then(response => {
         this.tags = response.body
         this.$refs.rtags.layout()
+        this.fetching = false
       })
     }
   },
   mounted () {
     setTimeout(() => { // wait for vue-isotope to be ready
       this.fetch()
-    }, 300)
+    }, 100)
   },
   watch: {
     tagQuery (val) {
